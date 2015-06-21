@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function
+
+import shogi
+import random
+
+import sys
+if not hasattr(sys.stdout, 'buffer'):
+    import locale
+    import codecs
+    sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
+
+board = shogi.Board()
+
+while True:
+    print(board.sfen())
+    print(board.kif_str())
+
+    moves = []
+    for move in board.legal_moves:
+        moves.append(move)
+
+    if len(moves) == 0:
+        break
+
+    next_move = random.choice(moves)
+
+    print(next_move)
+
+    board.push(next_move)

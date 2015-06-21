@@ -1,0 +1,14 @@
+language: python
+sudo: false
+python:
+ - "2.7"
+ - "3.3"
+ - "3.4"
+ - "nightly"
+install:
+ - pip install coveralls
+script:
+ - nosetests -v --with-coverage --cover-package=shogi
+ - if [[ $TRAVIS_PYTHON_VERSION != '2.7' ]]; then coverage run --source shogi --append -m doctest README.rst --verbose; fi
+after_success:
+ - coveralls

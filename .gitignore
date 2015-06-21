@@ -1,0 +1,14 @@
+*.swp
+*.py[cod]
+*~
+.eggs/
+.coverage
+.coveralls.yml
+.python-version
+.tox/
+dist/
+build/
+temp/
+python_shogi.egg-info/
+nosetests.xml
+docs/_build/

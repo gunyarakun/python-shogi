@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function, unicode_literals
+
+import shogi
+from shogi import CSA
+import random
+
+import sys
+if not hasattr(sys.stdout, 'buffer'):
+    import locale
+    import codecs
+    sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
+
+if len(sys.argv) != 4:
+    print('Usage: {0} host_name user_name password'.format(sys.argv[0]))
+    sys.exit(1)
+
+while True:
+    ct = CSA.TCPProtocol(sys.argv[1], 4081)
+# ct = CSAProtocol('wdoor.c.u-tokyo.ac.jp', 4081)
+    ct.login(sys.argv[2], sys.argv[3])
+    game_summary = ct.wait_match()
+    sfen = game_summary['summary']['sfen']
+    my_color = game_summary['my_color']
+    board = shogi.Board(sfen)
+    ct.agree()
+
+    while True:
+        print(board.sfen())
+        print(board.kif_str())
+
+        if board.turn == my_color:
+            moves = []
+            for move in board.legal_moves:
+                moves.append(move)
+
+            if len(moves) == 0:
+                ct.resign()
+                break
+            else:
+                next_move = random.choice(moves)
+                print('ADD SELF MOVE: {0}'.format(next_move))
+                board.push(next_move)
+                ct.move(board.pieces[next_move.to_square], my_color, next_move)
+        else:
+            (turn, usi, spend_time, message) = ct.wait_server_message(board)
+
+            if message is not None:
+                print('MESSAGE: {0}'.format(CSA.SERVER_MESSAGE_SYMBOLS[message]))
+                if message == CSA.WIN:
+                    break
+                elif message == CSA.LOSE:
+                    break
+                elif message == CSA.CENSORED:
+                    break
+                elif message == CSA.CHUDAN:
+                    break
+            else:
+                if turn != board.turn:
+                    raise ValueError('Invalid turn')
+                move = shogi.Move.from_usi(usi)
+                print('ADD OPPONENT MOVE: {0}'.format(move))
+                board.push(move)
