@@ -337,10 +337,10 @@ class TCPProtocol:
         return line
 
     def write(self, buf):
-        self.socket.sendall(buf)
+        self.socket.sendall(buf.encode('utf-8'))
 
     def read(self):
-        buf = self.socket.recv(SOCKET_RECV_SIZE)
+        buf = self.socket.recv(SOCKET_RECV_SIZE).decode('utf-8')
         self.recv_buf += buf
         return len(buf)
 
