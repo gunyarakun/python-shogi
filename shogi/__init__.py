@@ -1079,7 +1079,7 @@ class Board(object):
                 return False
 
             # Handle moves by piece type.
-            return bool(Board.attacks_from(piece, move.from_square, self.occupied, self.turn ^ 1) & to_mask)
+            return bool(Board.attacks_from(piece, move.from_square, self.occupied, self.turn) & to_mask)
         elif move.drop_piece_type:
             # Cannot set promoted piece
             if move.promotion:

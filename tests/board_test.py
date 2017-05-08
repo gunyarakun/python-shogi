@@ -131,5 +131,42 @@ class BoardTestCase(unittest.TestCase):
         board.push(shogi.Move.from_usi('6b8b'))
         self.assertTrue(board.is_fourfold_repetition())
 
+    def test_legal_moves_in(self):
+        # https://github.com/gunyarakun/python-shogi/issues/3
+        board = shogi.Board()
+        self.assertTrue(shogi.Move.from_usi('9g9f') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('8g8f') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('7g7f') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('6g6f') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('5g5f') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('4g4f') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('3g3f') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('2g2f') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('1g1f') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('9i9h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('1i1h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('7i7h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('7i6h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('3i4h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('3i3h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('6i7h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('6i6h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('6i5h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('4i5h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('4i4h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('4i3h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('2h7h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('2h6h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('2h5h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('2h4h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('2h3h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('2h1h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('5i6h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('5i5h') in board.legal_moves)
+        self.assertTrue(shogi.Move.from_usi('5i4h') in board.legal_moves)
+
+        # opposite turn
+        self.assertFalse(shogi.Move.from_usi('9c9d') in board.legal_moves)
+
 if __name__ == '__main__':
     unittest.main()
