@@ -26,23 +26,10 @@ __version__ = '1.0.2'
 import collections
 import re
 
-COLORS = [BLACK, WHITE] = range(2)
-PIECE_TYPES_WITH_NONE = [NONE,
-           PAWN,      LANCE,      KNIGHT,      SILVER,
-           GOLD,
-         BISHOP,       ROOK,
-           KING,
-      PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
-    PROM_BISHOP,  PROM_ROOK,
-] = range(15)
-PIECE_TYPES = [
-           PAWN,      LANCE,      KNIGHT,      SILVER,
-           GOLD,
-         BISHOP,       ROOK,
-           KING,
-      PROM_PAWN, PROM_LANCE, PROM_KNIGHT, PROM_SILVER,
-    PROM_BISHOP,  PROM_ROOK,
-]
+from Move import *
+from Piece import *
+from Consts import *
+
 PIECE_TYPES_WITHOUT_KING = [
            PAWN,      LANCE,      KNIGHT,      SILVER,
            GOLD,
@@ -70,13 +57,6 @@ PIECE_PROMOTED = [
            None,       None,
 ];
 
-PIECE_SYMBOLS = ['',   'p',  'l',  'n',  's', 'g',  'b',  'r', 'k',
-                      '+p', '+l', '+n', '+s',      '+b', '+r']
-PIECE_JAPANESE_SYMBOLS = [
-    '',
-    '\u6b69', '\u9999', '\u6842', '\u9280', '\u91d1', '\u89d2', '\u98db',
-    '\u7389', '\u3068', '\u674f', '\u572d', '\u5168', '\u99ac', '\u9f8d'
-]
 NUMBER_JAPANESE_NUMBER_SYMBOLS = [
     '\uff10', '\uff11', '\uff12', '\uff13', '\uff14',
     '\uff15', '\uff16', '\uff17', '\uff18', '\uff19'
@@ -136,22 +116,6 @@ SQUARES_L45 = [
     H9, I8, A7, B6, C5, D4, E3, F2, G1,
     I9, A8, B7, C6, D5, E4, F3, G2, H1,
     A9, B8, C7, D6, E5, F4, G3, H2, I1,
-]
-
-# NOTE: In chess we use "file - rank" notation like 'a1',
-#       in shogi we use a number for file, an alphabet for rank
-#       and opposite direction of files and ranks like '9i'.
-#       We use chess style notation internally, but exports it with this table.
-SQUARE_NAMES = [
-    '9a', '8a', '7a', '6a', '5a', '4a', '3a', '2a', '1a',
-    '9b', '8b', '7b', '6b', '5b', '4b', '3b', '2b', '1b',
-    '9c', '8c', '7c', '6c', '5c', '4c', '3c', '2c', '1c',
-    '9d', '8d', '7d', '6d', '5d', '4d', '3d', '2d', '1d',
-    '9e', '8e', '7e', '6e', '5e', '4e', '3e', '2e', '1e',
-    '9f', '8f', '7f', '6f', '5f', '4f', '3f', '2f', '1f',
-    '9g', '8g', '7g', '6g', '5g', '4g', '3g', '2g', '1g',
-    '9h', '8h', '7h', '6h', '5h', '4h', '3h', '2h', '1h',
-    '9i', '8i', '7i', '6i', '5i', '4i', '3i', '2i', '1i',
 ]
 
 def file_index(square):
@@ -495,163 +459,6 @@ def can_move_without_promotion(to_square, piece_type, color):
                 (piece_type == LANCE and rank_index(to_square) < 8) or
                 (piece_type == KNIGHT and rank_index(to_square) < 7) )
 
-class Piece(object):
-    def __init__(self, piece_type, color):
-        if piece_type is None:
-            raise ValueError('Piece type must be set')
-        if color is None:
-            raise ValueError('Color must be set')
-        self.piece_type = piece_type
-        self.color = color
-
-    def symbol(self):
-        '''
-        Gets the symbol `p`, `l`, `n`, etc.
-        '''
-        if self.color == BLACK:
-            return PIECE_SYMBOLS[self.piece_type].upper()
-        else:
-            return PIECE_SYMBOLS[self.piece_type]
-
-    def japanese_symbol(self):
-        # no direction
-        return PIECE_JAPANESE_SYMBOLS[self.piece_type]
-
-    def japanese_symbol_with_direction(self):
-        if self.color == BLACK:
-            prefix = ' '
-        else:
-            prefix = 'v'
-        return prefix + PIECE_JAPANESE_SYMBOLS[self.piece_type]
-
-    def is_promoted(self):
-        return self.piece_type >= PROM_PAWN
-
-    def __hash__(self):
-        return self.piece_type * (self.color + 1)
-
-    def __repr__(self):
-        return "Piece.from_symbol('{0}')".format(self.symbol())
-
-    def __str__(self):
-        return self.symbol()
-
-    def __eq__(self, other):
-        try:
-            return self.piece_type == other.piece_type and self.color == other.color
-        except AttributeError:
-            return False
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    @classmethod
-    def from_symbol(cls, symbol):
-        '''
-        Creates a piece instance from a piece symbol.
-        Raises `ValueError` if the symbol is invalid.
-        '''
-        if symbol.lower() == symbol:
-            return cls(PIECE_SYMBOLS.index(symbol), WHITE)
-        else:
-            return cls(PIECE_SYMBOLS.index(symbol.lower()), BLACK)
-
-class Move(object):
-    '''
-    Represents a move from a square to a square and possibly the promotion piece
-    type.
-    Null moves are supported.
-    '''
-
-    def __init__(self, from_square, to_square, promotion=False, drop_piece_type=None):
-        # if from_square is None, it's a drop and
-        self.from_square = from_square
-        self.to_square = to_square
-        if from_square is None and to_square is not None:
-            if drop_piece_type is None:
-                raise ValueError('Drop piece type must be set.')
-            if promotion:
-                raise ValueError('Cannot set promoted piece.')
-            self.promotion = False
-            self.drop_piece_type = drop_piece_type
-        else:
-            self.promotion = promotion
-            if drop_piece_type:
-                raise ValueError('Drop piece type must not be set.')
-            self.drop_piece_type = None
-
-    def usi(self):
-        '''
-        Gets an USI string for the move.
-        For example a move from 7A to 8A would be `7a8a` or `7a8a+` if it is
-        a promotion.
-        '''
-        if self:
-            if self.drop_piece_type:
-                return '{0}*{1}'.format(PIECE_SYMBOLS[self.drop_piece_type].upper(), SQUARE_NAMES[self.to_square])
-            else:
-                return SQUARE_NAMES[self.from_square] + SQUARE_NAMES[self.to_square] + \
-                       ('+' if self.promotion else '')
-        else:
-            return '0000'
-
-    def __bool__(self):
-        return self.to_square is not None
-
-    def __nonzero__(self):
-        return self.to_square is not None
-
-    def __eq__(self, other):
-        try:
-            return self.from_square == other.from_square and self.to_square == other.to_square and \
-                   self.promotion == other.promotion and self.drop_piece_type == other.drop_piece_type
-        except AttributeError:
-            return False
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __repr__(self):
-        return "Move.from_usi('{0}')".format(self.usi())
-
-    def __str__(self):
-        return self.usi()
-
-    def __hash__(self):
-        # 7 bit is enought to represent 81 patterns
-        return self.to_square | (self.from_square or (81 + self.drop_piece_type)) << 7 | self.promotion << 14
-
-    @classmethod
-    def from_usi(cls, usi):
-        '''
-        Parses an USI string.
-        Raises `ValueError` if the USI string is invalid.
-        '''
-        if usi == '0000':
-            return cls.null()
-        elif len(usi) == 4:
-            if usi[1] == '*':
-                piece = Piece.from_symbol(usi[0])
-                return cls(None, SQUARE_NAMES.index(usi[2:4]), False, piece.piece_type)
-            else:
-                return cls(SQUARE_NAMES.index(usi[0:2]), SQUARE_NAMES.index(usi[2:4]))
-        elif len(usi) == 5 and usi[4] == '+':
-            return cls(SQUARE_NAMES.index(usi[0:2]), SQUARE_NAMES.index(usi[2:4]), True)
-        else:
-            raise ValueError('expected usi string to be of length 4 or 5')
-
-    @classmethod
-    def null(cls):
-        '''
-        Gets a null move.
-        A null move just passes the turn to the other side (and possibly
-        forfeits en-passant capturing). Null moves evaluate to `False` in
-        boolean contexts.
-        >>> bool(shogi.Move.null())
-        False
-        '''
-        return cls(0, 0, NONE)
-
 
 class Occupied(object):
     def __init__(self, occupied_by_black, occupied_by_white):
@@ -696,6 +503,7 @@ class Occupied(object):
 
     def __repr__(self):
         return 'Occupied({0})'.format(repr(self.by_color))
+
 
 class Board(object):
     '''
