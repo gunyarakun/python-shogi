@@ -17,12 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import io
 import shogi
 import setuptools
-import os
 
 def read_description():
-  description = open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8').read()
+  description = io.open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8').read()
   return description
 
 setuptools.setup(
