@@ -24,7 +24,6 @@ __email__ = 'tasuku-s-github@titech.ac'
 __version__ = '1.0.2'
 
 import collections
-import re
 
 from Move import *
 from Piece import *
