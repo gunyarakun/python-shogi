@@ -1,5 +1,6 @@
 *.swp
 *.py[cod]
+*.so
 *~
 .eggs/
 .coverage

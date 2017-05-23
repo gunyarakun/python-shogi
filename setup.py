@@ -19,7 +19,6 @@
 
 import os
 import io
-import shogi
 import setuptools
 
 def read_description():
@@ -28,9 +27,9 @@ def read_description():
 
 setuptools.setup(
     name = 'python-shogi',
-    version = shogi.__version__,
-    author = shogi.__author__,
-    author_email = shogi.__email__,
+    version = '1.1.0',
+    author = 'Tasuku SUENAGA a.k.a. gunyarakun',
+    author_email = 'tasuku-s-github@titech.ac',
     description = 'A pure Python shogi library with move generation and validation and handling of common formats.',
     long_description = read_description(),
     license = "GPL3",
@@ -52,4 +51,8 @@ setuptools.setup(
       'Topic :: Games/Entertainment :: Board Games',
       'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+    ext_modules = [
+        setuptools.Extension('shogi.Board', ['src/Board.c']),
+        setuptools.Extension('shogi', ['src/shogi.c'])
+    ]
 )
