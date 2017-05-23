@@ -52,7 +52,6 @@ setuptools.setup(
       'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     ext_modules = [
-        setuptools.Extension('shogi.Board', ['src/Board.c']),
-        setuptools.Extension('shogi', ['src/shogi.c'])
+        setuptools.Extension('shogi.cextension', ['src/cextension.c']),
     ]
 )
