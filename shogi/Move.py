@@ -7,7 +7,7 @@ from __future__ import unicode_literals
 #       and opposite direction of files and ranks like '9i'.
 #       We use chess style notation internally, but exports it with this table.
 
-from Piece import *
+from .Piece import *
 
 SQUARE_NAMES = [
     '9a', '8a', '7a', '6a', '5a', '4a', '3a', '2a', '1a',

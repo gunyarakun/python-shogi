@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-from Consts import *
+from .Consts import *
 
 PIECE_SYMBOLS = ['',   'p',  'l',  'n',  's', 'g',  'b',  'r', 'k',
                       '+p', '+l', '+n', '+s',      '+b', '+r']

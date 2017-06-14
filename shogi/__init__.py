@@ -25,9 +25,9 @@ __version__ = '1.0.2'
 
 import collections
 
-from Move import *
-from Piece import *
-from Consts import *
+from .Move import *
+from .Piece import *
+from .Consts import *
 
 PIECE_TYPES_WITHOUT_KING = [
            PAWN,      LANCE,      KNIGHT,      SILVER,
