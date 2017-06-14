@@ -53,7 +53,7 @@ class Move(object):
         '''
         if self:
             if self.drop_piece_type:
-                return '{0}*{1}'.format(Piece.PIECE_SYMBOLS[self.drop_piece_type].upper(), SQUARE_NAMES[self.to_square])
+                return '{0}*{1}'.format(PIECE_SYMBOLS[self.drop_piece_type].upper(), SQUARE_NAMES[self.to_square])
             else:
                 return SQUARE_NAMES[self.from_square] + SQUARE_NAMES[self.to_square] + \
                        ('+' if self.promotion else '')
