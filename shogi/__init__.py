@@ -1108,7 +1108,7 @@ class Board(object):
         for color in COLORS:
             p = self.pieces_in_hand[color]
             pih_len += len(p)
-            for piece_type in p.keys():
+            for piece_type in sorted(p.keys(), reverse=True):
                 if p[piece_type] >= 1:
                     if p[piece_type] > 1:
                         sfen.append(str(p[piece_type]))
