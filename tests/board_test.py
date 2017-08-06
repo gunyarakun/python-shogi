@@ -168,5 +168,11 @@ class BoardTestCase(unittest.TestCase):
         # opposite turn
         self.assertFalse(shogi.Move.from_usi('9c9d') in board.legal_moves)
 
+    def test_sfen_piece_in_hand_order(self):
+        # ref: https://web.archive.org/web/20080131070731/http://www.glaurungchess.com/shogi/usi.html
+        # Invalid sfen, but acceptable in python-shogi
+        board = shogi.Board('4k4/9/9/9/9/9/9/9/4K4 b 9p2l2n2s2gbr9P2L2N2S2GBR 1')
+        self.assertEqual(board.sfen(), '4k4/9/9/9/9/9/9/9/4K4 b RB2G2S2N2L9Prb2g2s2n2l9p 1')
+
 if __name__ == '__main__':
     unittest.main()
