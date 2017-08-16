@@ -174,5 +174,10 @@ class BoardTestCase(unittest.TestCase):
         board = shogi.Board('4k4/9/9/9/9/9/9/9/4K4 b 9p2l2n2s2gbr9P2L2N2S2GBR 1')
         self.assertEqual(board.sfen(), '4k4/9/9/9/9/9/9/9/4K4 b RB2G2S2N2L9Prb2g2s2n2l9p 1')
 
+    def test_issue_6(self):
+        # double pawn should be checked for their own pawn
+        board = shogi.Board('lr7/3skgg1+B/2n2s1pp/p1p1ppP2/3p1np2/1PPPP4/PS1G1P2P/2GS3R1/LNK4NL w L2pb 58')
+        self.assertEqual(len(board.legal_moves), 92)
+
 if __name__ == '__main__':
     unittest.main()

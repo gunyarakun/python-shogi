@@ -969,7 +969,7 @@ class Board(object):
     def is_double_pawn(self, to_square, piece_type):
         if piece_type != PAWN:
             return False
-        return self.piece_bb[PAWN] & BB_FILES[file_index(to_square)]
+        return self.piece_bb[PAWN] & self.occupied[self.turn] & BB_FILES[file_index(to_square)]
 
     def push(self, move):
         '''
