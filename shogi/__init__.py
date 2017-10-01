@@ -99,7 +99,7 @@ SQUARES_R45 = [
     C9, B8, A7, I6, H5, G4, F3, E2, D1,
     D9, C8, B7, A6, I5, H4, G3, F2, E1,
     E9, D8, C7, B6, A5, I4, H3, G2, F1,
-    F9, E8, D2, C6, B5, A4, I3, H2, G1,
+    F9, E8, D7, C6, B5, A4, I3, H2, G1,
     G9, F8, E7, D6, C5, B4, A3, I2, H1,
     H9, G8, F7, E6, D5, C4, B3, A2, I1,
     I9, H8, G7, F6, E5, D4, C3, B2, A1,

@@ -179,5 +179,10 @@ class BoardTestCase(unittest.TestCase):
         board = shogi.Board('lr7/3skgg1+B/2n2s1pp/p1p1ppP2/3p1np2/1PPPP4/PS1G1P2P/2GS3R1/LNK4NL w L2pb 58')
         self.assertEqual(len(board.legal_moves), 92)
 
+    def test_issue_7(self):
+        # SQUARES_R45 was wrong
+        board = shogi.Board('lnsg1g1nl/3k3r1/pppp1s1pp/b3p1p2/2PP1p2B/P3P3P/1P3PPP1/1S3K1R1/LN1G1GSNL w - 1')
+        self.assertEqual(len(board.legal_moves), 39)
+
 if __name__ == '__main__':
     unittest.main()
