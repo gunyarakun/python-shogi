@@ -83,8 +83,12 @@ class Move(object):
         return self.usi()
 
     def __hash__(self):
-        # 7 bit is enought to represent 81 patterns
-        return self.to_square | (self.from_square or (81 + self.drop_piece_type)) << 7 | self.promotion << 14
+        # 7 bit is enough to represent 81 patterns
+        if self.drop_piece_type is None:
+            return self.to_square | self.from_square << 7 | self.promotion << 14
+        else:
+            # drop piece
+            return self.to_square | (81 + self.drop_piece_type) << 7
 
     @classmethod
     def from_usi(cls, usi):
