@@ -27,10 +27,10 @@ class MoveTestCase(unittest.TestCase):
         self.assertEqual(move.__hash__(), 9)
 
     def test_issue_9(self):
-	self.assertEqual(bool(shogi.Move.null()), False)
-	board = shogi.Board()
-	board.push(shogi.Move.null())
-	self.assertEqual(board.captured_piece_stack[0], 0)
+        self.assertEqual(bool(shogi.Move.null()), False)
+        board = shogi.Board()
+        board.push(shogi.Move.null())
+        self.assertEqual(board.captured_piece_stack[0], 0)
 
 if __name__ == '__main__':
     unittest.main()
