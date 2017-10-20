@@ -61,10 +61,10 @@ class Move(object):
             return '0000'
 
     def __bool__(self):
-        return self.to_square is not None
+        return not bool(self.from_square is None and self.to_square is None)
 
     def __nonzero__(self):
-        return self.to_square is not None
+        return (self.from_square or self.to_square) is not None
 
     def __eq__(self, other):
         try:
