@@ -119,4 +119,4 @@ class Move(object):
         >>> bool(shogi.Move.null())
         False
         '''
-        return cls(0, 0, NONE)
+        return cls(None, None, NONE)
