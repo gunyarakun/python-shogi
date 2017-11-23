@@ -402,15 +402,18 @@ class TCPProtocol:
             line = self.read_line(block)
             if line is None:
                 return None
-            if line[0] in COLOR_SYMBOLS:
-                (move_str, time_str) = line.split(',')
-                (color, usi) = Parser.parse_move_str(move_str, board)
-                return (color, usi, self.parse_consumed_time_str(time_str), None)
-            elif line[0] in ['#', '%']:
-                message = SERVER_MESSAGE_SYMBOLS.index(line[1:])
-                return (None, None, None, message)
-            else:
-                raise ValueError('Invalid lines')
+            return self.parse_server_message(line, board)
+
+    def parse_server_message(self, line, board):
+        if line[0] in COLOR_SYMBOLS:
+            (move_str, time_str) = line.split(',')
+            (color, usi) = Parser.parse_move_str(move_str, board)
+            return (color, usi, self.parse_consumed_time_str(time_str), None)
+        elif line[0] in ['#', '%']:
+            message = SERVER_MESSAGE_SYMBOLS.index(line[1:])
+            return (None, None, None, message)
+        else:
+            raise ValueError('Invalid lines')
 
     def parse_consumed_time_str(self, time_str):
         # This function always returns float seconds.
@@ -504,7 +507,7 @@ class TCPProtocol:
                 from_square,
                 SQUARE_NAMES[move.to_square],
                 PIECE_SYMBOLS[piece_type])
-        line = self.command(command)
+        return self.command(command)
 
     def resign(self):
         # TODO: check RESIGN
