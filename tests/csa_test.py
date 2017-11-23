@@ -73,7 +73,8 @@ class ParserTest(unittest.TestCase):
 TEST_SUMMARY = {
     'names': ['kiki_no_onaka_black', 'kiki_no_omata_white'],
     'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1',
-    'moves': []
+    'moves': [],
+    'time': {'Time_Unit': '1sec', 'Total_Time': '900', 'Byoyomi': '0', 'Least_Time_Per_Move': '1'}
 }
 
 TEST_SUMMARY_STR = '''BEGIN Game_Summary
