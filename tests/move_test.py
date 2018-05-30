@@ -26,11 +26,5 @@ class MoveTestCase(unittest.TestCase):
         move = shogi.Move.from_usi('9a9b')
         self.assertEqual(move.__hash__(), 9)
 
-    def test_issue_9(self):
-        self.assertEqual(bool(shogi.Move.null()), False)
-        board = shogi.Board()
-        board.push(shogi.Move.null())
-        self.assertEqual(board.captured_piece_stack[0], 0)
-
 if __name__ == '__main__':
     unittest.main()

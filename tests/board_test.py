@@ -184,5 +184,19 @@ class BoardTestCase(unittest.TestCase):
         board = shogi.Board('lnsg1g1nl/3k3r1/pppp1s1pp/b3p1p2/2PP1p2B/P3P3P/1P3PPP1/1S3K1R1/LN1G1GSNL w - 1')
         self.assertEqual(len(board.legal_moves), 39)
 
+    def test_issue_9(self):
+        self.assertEqual(bool(shogi.Move.null()), False)
+        board = shogi.Board()
+        board.push(shogi.Move.null())
+        self.assertEqual(board.captured_piece_stack[0], 0)
+
+    def test_issue_15(self):
+        # Issue: All moves from "9a" are not pseudo legal.
+        board = shogi.Board()
+        # pass turn to white
+        board.push(shogi.Move.from_usi('9h9g'))
+        move = shogi.Move.from_usi('9a9b')
+        self.assertEqual(board.is_pseudo_legal(move), True)
+
 if __name__ == '__main__':
     unittest.main()

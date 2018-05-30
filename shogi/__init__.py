@@ -862,7 +862,7 @@ class Board(object):
         if self.occupied[self.turn] & to_mask:
             return False
 
-        if move.from_square:
+        if move.from_square is not None:
             from_mask = BB_SQUARES[move.from_square]
             # Source square must not be vacant.
             piece = self.piece_type_at(move.from_square)
