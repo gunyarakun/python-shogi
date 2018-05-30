@@ -164,7 +164,7 @@ class TCPProtocolTest(unittest.TestCase):
         self.assertEqual(spend_time, 1.0)
 
         self.assertEqual(board.sfen(), 'lnsgkgsnl/1r5b1/ppppppppp/9/9/4P4/PPPP1PPPP/1B5R1/LNSGKGSNL w - 2')
-        
+
         next_move = shogi.Move.from_usi('8c8d')
         board.push(next_move)
         self.add_response(tcp, '-8384FU,T2\n')
