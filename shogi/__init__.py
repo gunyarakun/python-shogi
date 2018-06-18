@@ -876,9 +876,9 @@ class Board(object):
             if move.promotion:
                 if piece == GOLD or piece == KING or piece >= PROM_PAWN:
                     return False
-                if self.turn == BLACK and rank_index(move.to_square) > 2:
+                if self.turn == BLACK and rank_index(move.to_square) > 2 and rank_index(move.from_square) > 2:
                     return False
-                elif self.turn == WHITE and rank_index(move.to_square) < 6:
+                elif self.turn == WHITE and rank_index(move.to_square) < 6 and rank_index(move.from_square) < 6:
                     return False
 
             # Can move without promotion

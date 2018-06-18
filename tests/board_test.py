@@ -198,5 +198,10 @@ class BoardTestCase(unittest.TestCase):
         move = shogi.Move.from_usi('9a9b')
         self.assertEqual(board.is_pseudo_legal(move), True)
 
+    def test_issue_17(self):
+        board = shogi.Board('ln1g3+Rl/1ks4s1/pp1gppbpp/2p3N2/9/5P1P1/PPPP1S1bP/2K1R1G2/LNSG3NL w 4p 42')
+        move = shogi.Move.from_usi('2g5d+')
+        self.assertTrue(move in board.legal_moves)
+
 if __name__ == '__main__':
     unittest.main()
