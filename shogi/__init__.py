@@ -21,7 +21,7 @@ from __future__ import unicode_literals
 
 __author__ = 'Tasuku SUENAGA a.k.a. gunyarakun'
 __email__ = 'tasuku-s-github@titech.ac'
-__version__ = '1.0.7'
+__version__ = '1.0.8'
 
 import collections
 
