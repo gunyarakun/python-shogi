@@ -54,7 +54,7 @@ PIECE_PROMOTED = [
            None,
            None,       None,        None,        None,
            None,       None,
-];
+]
 
 NUMBER_JAPANESE_NUMBER_SYMBOLS = [
     '\uff10', '\uff11', '\uff12', '\uff13', '\uff14',
