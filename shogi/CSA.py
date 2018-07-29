@@ -232,7 +232,7 @@ class Parser:
         position['pieces_in_hand'] = [
             dict(position['pieces_in_hand'][0]),
             dict(position['pieces_in_hand'][1]),
-        ];
+        ]
         return position
 
 class Exporter:
@@ -526,5 +526,5 @@ class CSAHeartbeat(threading.Thread):
         if self.ping_timer >= self.ping_duration:
             ping_target.ping()
 
-        self.ping_timer += self.sleep_duration;
+        self.ping_timer += self.sleep_duration
         time.sleep(self.sleep_duration)
