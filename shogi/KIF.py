@@ -51,7 +51,8 @@ class Parser:
 
     @staticmethod
     def parse_file(path):
-        with codecs.open(path, 'r', 'cp932') as f:
+        enc = 'utf-8' if path.rsplit('.', 1)[1] == 'kifu' else 'cp932'
+        with codecs.open(path, 'r', enc) as f:
             return Parser.parse_str(f.read())
 
     @staticmethod
