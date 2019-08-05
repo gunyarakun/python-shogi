@@ -54,16 +54,17 @@ P8 * +KA *  *  *  *  * +HI *
 P9+KY+KE+GI+KI+OU+KI+GI+KE+KY
 '先手番
 +
-'指し手と消費時間
+'指し手と消費時間(optional)
 +2726FU
 T12
 -3334FU
 T6
++7776FU
 %TORYO
 '---------------------------------------------------------
 """
 
-TEST_CSA_SUMMARY = {'moves': ['2g2f', '3c3d'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['NAKAHARA', 'YONENAGA'], 'win': 'w'}
+TEST_CSA_SUMMARY = {'moves': ['2g2f', '3c3d', '7g7f'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['NAKAHARA', 'YONENAGA'], 'win': 'b'}
 
 class ParserTest(unittest.TestCase):
     def parse_str_test(self):
@@ -172,6 +173,13 @@ class TCPProtocolTest(unittest.TestCase):
         (turn, usi, spend_time, message) = tcp.parse_server_message(response_line, board)
         self.assertEqual(turn, shogi.WHITE)
         self.assertEqual(spend_time, 2.0)
+
+        # without spent time ex.) Shogidokoro
+        self.add_response(tcp, '+5655FU\n')
+        (turn, usi, spend_time, message) = tcp.wait_server_message(board)
+        board.push(shogi.Move.from_usi(usi))
+        self.assertEqual(turn, shogi.BLACK)
+        self.assertEqual(spend_time, None)
 
 if __name__ == '__main__':
     unittest.main()

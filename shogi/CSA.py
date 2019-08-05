@@ -405,18 +405,12 @@ class TCPProtocol:
             return self.parse_server_message(line, board)
 
     def parse_server_message(self, line, board):
-        """
         if line[0] in COLOR_SYMBOLS:
-            (move_str, time_str) = line.split(',')
+            move_strs = line.split(',')
+            move_str = move_strs[0]
+            time_str = move_strs[1] if len(move_strs) > 1 else None
             (color, usi) = Parser.parse_move_str(move_str, board)
             return (color, usi, self.parse_consumed_time_str(time_str), None)
-        """
-        if line[0] in COLOR_SYMBOLS:
-            move_str = line
-            (color, usi) = Parser.parse_move_str(move_str, board)
-            return (color, usi, None, None)
-            #上部分を変更しました。
-            #将棋所ではlineへ-8384Fのように帰ってくるため、splitできない旨のエラーが出ました。
         elif line[0] in ['#', '%']:
             message = SERVER_MESSAGE_SYMBOLS.index(line[1:])
             return (None, None, None, message)
@@ -426,7 +420,9 @@ class TCPProtocol:
     def parse_consumed_time_str(self, time_str):
         # This function always returns float seconds.
         # TODO: refer Time_Unit header.
-        if time_str[0] != 'T':
+        if time_str is None:
+            return None
+        elif time_str[0] != 'T':
             raise ValueError('Invalid consumed time format')
         return float(time_str[1:])
 
