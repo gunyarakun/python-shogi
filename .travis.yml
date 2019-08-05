@@ -3,8 +3,7 @@ sudo: false
 python:
  - "2.7"
  - "3.3"
- - "3.4"
- - "nightly"
+ - "3.6"
 install:
  - pip install coveralls
 script:
