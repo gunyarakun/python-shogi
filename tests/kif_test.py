@@ -19,7 +19,12 @@
 from __future__ import unicode_literals
 
 import shogi
+
+import os
+import codecs
+import shutil
 import unittest
+import tempfile
 from mock import patch
 from shogi import KIF
 
@@ -384,3 +389,30 @@ class ParserTest(unittest.TestCase):
     def parse_str_with_time_test(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR_WITH_TIME)
         self.assertEqual(result[0], TEST_KIF_WITH_TIME_RESULT)
+
+    def parse_file_test(self):
+        try:
+            tempdir = tempfile.mkdtemp()
+
+            # .kif
+            path = os.path.join(tempdir, 'test1.kif')
+            with codecs.open(path, 'w', 'cp932') as f:
+                f.write(TEST_KIF_STR)
+            result = KIF.Parser.parse_file(path)
+            self.assertEqual(result[0], TEST_KIF_RESULT)
+
+            # .kifu
+            path = os.path.join(tempdir, 'test2.kifu')
+            with codecs.open(path, 'w', 'utf-8') as f:
+                f.write(TEST_KIF_STR)
+            result = KIF.Parser.parse_file(path)
+            self.assertEqual(result[0], TEST_KIF_RESULT)
+
+            # without extension (cp932)
+            path = os.path.join(tempdir, 'kiffile')
+            with codecs.open(path, 'w', 'cp932') as f:
+                f.write(TEST_KIF_STR)
+            result = KIF.Parser.parse_file(path)
+            self.assertEqual(result[0], TEST_KIF_RESULT)
+        finally:
+            shutil.rmtree(tempdir)

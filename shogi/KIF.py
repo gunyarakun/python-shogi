@@ -20,6 +20,7 @@
 
 from __future__ import unicode_literals
 
+import os
 import re
 import shogi
 import codecs
@@ -51,7 +52,8 @@ class Parser:
 
     @staticmethod
     def parse_file(path):
-        enc = 'utf-8' if path.rsplit('.', 1)[1] == 'kifu' else 'cp932'
+        prefix, ext = os.path.splitext(path)
+        enc = 'utf-8' if ext == '.kifu' else 'cp932'
         with codecs.open(path, 'r', enc) as f:
             return Parser.parse_str(f.read())
 
