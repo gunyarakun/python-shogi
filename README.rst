@@ -196,8 +196,8 @@ Features
       >>> shogi.Person.Name.is_professional('羽生　善治 名人・棋聖・王位・王座')
       True
 
-Peformance
-----------
+Performance
+-----------
 python-shogi is not intended to be used by serious shogi engines where
 performance is critical. The goal is rather to create a simple and relatively
 highlevel library.
