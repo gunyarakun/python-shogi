@@ -528,7 +528,7 @@ class CSAHeartbeat(threading.Thread):
 
     def run(self):
         if self.ping_timer >= self.ping_duration:
-            ping_target.ping()
+            self.ping_target.ping()
 
         self.ping_timer += self.sleep_duration
         time.sleep(self.sleep_duration)
