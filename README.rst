@@ -164,7 +164,7 @@ Features
       >>> board.piece_at(shogi.I5)
       Piece.from_symbol('K')
 
-* Read and write KIFs.
+* Read KIFs.
 
   .. code:: python
 
