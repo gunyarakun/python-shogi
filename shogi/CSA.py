@@ -323,13 +323,14 @@ class TCPProtocol:
                 self.socket = socket.socket(af, socktype, proto)
                 self.socket.connect(sa)
             except socket.error as msg:
+                self.msg = msg
                 if self.socket:
                     self.socket.close()
                 self.socket = None
                 continue
             break
         if not self.socket:
-            raise socket.error(msg)
+            raise socket.error(self.msg)
 
     def command(self, command):
         self.write(command + '\n')
@@ -528,7 +529,7 @@ class CSAHeartbeat(threading.Thread):
 
     def run(self):
         if self.ping_timer >= self.ping_duration:
-            ping_target.ping()
+            self.ping_target.ping()
 
         self.ping_timer += self.sleep_duration
         time.sleep(self.sleep_duration)
