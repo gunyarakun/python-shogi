@@ -175,8 +175,9 @@ class Parser:
     @staticmethod
     def parse_position(position_block_lines):
         # ex.) P1-KY-KE-GI-KI-OU-KI-GI-KE-KY
+        # ex.) PI82HI22KA
         position = {
-            'pieces': [0 for x in range(81)],
+            'pieces': [None for x in range(81)],
             'pieces_in_hand': [
                 collections.Counter(),
                 collections.Counter(),
@@ -197,18 +198,19 @@ class Parser:
             elif line[1] in COLOR_SYMBOLS:
                 index = 2
                 color = COLOR_SYMBOLS.index(line[1])
-                while True:
-                    rank_index = int(line[index:index + 1])
-                    index += 1
+                while index < len(line):
                     file_index = int(line[index:index + 1])
                     index += 1
+                    rank_index = int(line[index:index + 1])
+                    index += 1
                     piece_type = PIECE_SYMBOLS.index(line[index:index + 2])
+                    index += 2
                     if rank_index == 0 and file_index == 0:
                         # piece in hand
                         position['pieces_in_hand'][color][piece_type] += 1
                     else:
                         position['pieces'][
-                            (rank_index - 1) * 9 + (file_index - 1)
+                            (rank_index - 1) * 9 + (9 - file_index)
                         ] = (piece_type, color)
             elif line[1] in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
                 rank_index = int(line[1:2]) - 1
@@ -227,6 +229,33 @@ class Parser:
                     ] = piece
 
                     file_index += 1
+            elif line[1] == 'I': # PI
+                position['pieces'] = [
+                        (2, 1), (3, 1), (4, 1), (5, 1), (8, 1), (5, 1), (4, 1), (3, 1), (2, 1),
+                          None, (7, 1),   None,   None,   None,   None,   None, (6, 1),   None,
+                        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
+                          None,   None,   None,   None,   None,   None,   None,   None,   None,
+                          None,   None,   None,   None,   None,   None,   None,   None,   None,
+                          None,   None,   None,   None,   None,   None,   None,   None,   None,
+                        (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                          None, (6, 0),   None,   None,   None,   None,   None, (7, 0),   None,
+                        (2, 0), (3, 0), (4, 0), (5, 0), (8, 0), (5, 0), (4, 0), (3, 0), (2, 0),
+                    ]
+                index = 2
+                while index < len(line):
+                    file_index = int(line[index:index + 1])
+                    index += 1
+                    rank_index = int(line[index:index + 1])
+                    index += 1
+                    piece_type = PIECE_SYMBOLS.index(line[index:index + 2])
+                    index += 2
+                    if rank_index == 0 and file_index == 0:
+                        # piece in hand
+                        raise NotImplementedError('TODO: Not implemented komaochi in komadai')
+                    piece_index = (rank_index - 1) * 9 + (9 - file_index)
+                    if position['pieces'][piece_index] is None or position['pieces'][piece_index][0] != piece_type:
+                        raise ValueError('Invalid piece removing on intializing a board'.format(line))
+                    position['pieces'][piece_index] = None
             else:
                 raise ValueError('Invalid rank/piece in hand: {0}'.format(line))
         position['pieces_in_hand'] = [

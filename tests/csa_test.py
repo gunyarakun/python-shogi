@@ -66,10 +66,36 @@ T6
 
 TEST_CSA_SUMMARY = {'moves': ['2g2f', '3c3d', '7g7f'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['NAKAHARA', 'YONENAGA'], 'win': 'b'}
 
+TEST_CSA_WITH_PI = '''
+V2.2
+N+先手
+N-後手
+$START_TIME:2020/05/04 12:40:52
+PI82HI22KA
++
++7776FU
+T1
+-8384FU
+T11
+%TORYO
+T0
+'''
+
+TEST_CSA_SUMMARY_WITH_PI = {
+    'moves': ['7g7f', '8c8d'],
+    'sfen': 'lnsgkgsnl/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1',
+    'names': ['先手', '後手'],
+    'win': 'w'
+}
+
 class ParserTest(unittest.TestCase):
     def parse_str_test(self):
         result = CSA.Parser.parse_str(TEST_CSA)
         self.assertEqual(result[0], TEST_CSA_SUMMARY)
+
+    def parse_str_test_with_PI(self):
+        result = CSA.Parser.parse_str(TEST_CSA_WITH_PI)
+        self.assertEqual(result[0], TEST_CSA_SUMMARY_WITH_PI)
 
 TEST_SUMMARY = {
     'names': ['kiki_no_onaka_black', 'kiki_no_omata_white'],
