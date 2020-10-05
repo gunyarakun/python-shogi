@@ -105,6 +105,15 @@ Features
       +---------------------------+
       先手の持駒：　銀
 
+* Render board as SVG.
+
+  .. code:: python
+
+      >>> print(board.svg())
+      <svg>
+        ...
+      </svg>
+
 * Detects checkmates, stalemates.
 
   .. code:: python
