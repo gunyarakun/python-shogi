@@ -414,6 +414,22 @@ class TCPProtocol:
                 raise ValueError('Login failed. Check username and password.')
         raise ValueError('Login response was invalid.')
 
+    def login_ex(self, username, password):
+        if not self.login_username_re.match(username):
+            raise ValueError('Invalid username.')
+        if ' ' in password:
+            raise ValueError('Invalid password.')
+
+        line = self.command('LOGIN {0} {1} x1'.format(username, password))
+        line_match = self.login_response_re.match(line)
+        if line_match:
+            if line_match.group(2) == ' OK':
+                if line_match.group(1) == username:
+                    return True
+            elif line_match.group(1) == 'incorrect':
+                raise ValueError('Login failed. Check username and password.')
+        raise ValueError('Login response was invalid.')
+        
     def logout(self):
         line = self.command('LOGOUT')
         if line == 'LOGOUT:completed':
