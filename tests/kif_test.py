@@ -336,6 +336,28 @@ TEST_KIF_STR_WITH_TIME = """# --- Kifu for Windows (HTTP) V6.54 棋譜ファイ�
 まで78手で後手の勝ち\r
 """
 
+TEST_KIF_81DOJO = """#KIF version=2.0 encoding=UTF-8\r
+開始日時：2020/12/31\r
+場所：81Dojo\r
+持ち時間：0分+10秒\r
+手合割：平手\r
+先手：KikiNoOmata\r
+後手：XiaoNoOmata\r
+手数----指手---------消費時間--\r
+1   ７六歩(77)   (0:2/0:0:2)\r
+2   ３四歩(33)   (0:5/0:0:5)\r
+3   ７五歩(76)   (0:2/0:0:4)\r
+4   ４四歩(43)   (0:8/0:0:13)\r
+5   ７八飛(28)   (0:2/0:0:6)\r
+6   ４二飛(82)   (0:1/0:0:14)\r
+7   ６八銀(79)   (0:2/0:0:8)\r
+8   ８二銀(71)   (0:2/0:0:16)\r
+9   ７四歩(75)   (0:1/0:0:9)\r
+10   同　歩(73)   (0:1/0:0:17)\r
+11   同　飛(78)   (0:1/0:0:10)\r
+12   投了   (0:5/0:0:22)\r
+"""
+
 TEST_KIF_RESULT = {
     'moves': [
         '7g7f', '3c3d', '2g2f', '4c4d', '3i4h', '8b4b', '5i6h', '5a6b', '6h7h',
@@ -381,6 +403,15 @@ TEST_KIF_WITH_TIME_RESULT = {
     'win': 'w',
 }
 
+TEST_KIF_81DOJO_RESULT = {
+    'moves': [
+        '7g7f', '3c3d', '7f7e', '4c4d', '2h7h', '8b4b', '7i6h', '7a8b', '7e7d', '7c7d', '7h7d'
+    ],
+    'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1',
+    'names': ['KikiNoOmata', 'XiaoNoOmata'],
+    'win': 'b',
+}
+
 class ParserTest(unittest.TestCase):
     def parse_str_test(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR)
@@ -389,6 +420,11 @@ class ParserTest(unittest.TestCase):
     def parse_str_with_time_test(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR_WITH_TIME)
         self.assertEqual(result[0], TEST_KIF_WITH_TIME_RESULT)
+
+    def parse_str_81dojo_test(self):
+        result = KIF.Parser.parse_str(TEST_KIF_81DOJO)
+        print(result[0])
+        self.assertEqual(result[0], TEST_KIF_81DOJO_RESULT)
 
     def parse_file_test(self):
         try:

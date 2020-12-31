@@ -29,7 +29,7 @@ class ParserException(Exception):
     pass
 
 class Parser:
-    MOVE_RE = re.compile(r'\A *[0-9]+\s*(\u4e2d\u65ad|\u6295\u4e86|\u6301\u5c06\u68cb|\u5148\u65e5\u624b|\u8a70\u307f|\u5207\u308c\u8ca0\u3051|\u53cd\u5247\u52dd\u3061|\u53cd\u5247\u8ca0\u3051|(([\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19])([\u96f6\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d])|\u540c\u3000)([\u6b69\u9999\u6842\u9280\u91d1\u89d2\u98db\u7389\u3068\u674f\u572d\u5168\u99ac\u9f8d])(\u6253|(\u6210?)\(([0-9])([0-9])\)))\s*(\([ /:0-9]+\))?\s*\Z')
+    MOVE_RE = re.compile(r'\A *[0-9]+\s+(\u4e2d\u65ad|\u6295\u4e86|\u6301\u5c06\u68cb|\u5148\u65e5\u624b|\u8a70\u307f|\u5207\u308c\u8ca0\u3051|\u53cd\u5247\u52dd\u3061|\u53cd\u5247\u8ca0\u3051|(([\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19])([\u96f6\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d])|\u540c\u3000)([\u6b69\u9999\u6842\u9280\u91d1\u89d2\u98db\u7389\u3068\u674f\u572d\u5168\u99ac\u9f8d])(\u6253|(\u6210?)\(([0-9])([0-9])\)))\s*(\([ /:0-9]+\))?\s*\Z')
 
     HANDYCAP_SFENS = {
         '\u5e73\u624b': shogi.STARTING_SFEN,
@@ -85,7 +85,8 @@ class Parser:
         line = line.replace('\u6210\u9999', '\u674f')
 
         m = Parser.MOVE_RE.match(line)
-        if m and m.group(1) not in [
+        if m:
+            if m.group(1) in [
                     '\u4e2d\u65ad',
                     '\u6295\u4e86',
                     '\u6301\u5c06\u68cb',
@@ -94,7 +95,13 @@ class Parser:
                     '\u5207\u308c\u8ca0\u3051',
                     '\u53cd\u5247\u304b\u52dd\u3061',
                     '\u53cd\u5247\u8ca0\u3051'
-                ]:
+            ]:
+                return (
+                    None,
+                    None,
+                    m.group(1)
+                )
+
             piece_type = shogi.PIECE_JAPANESE_SYMBOLS.index(m.group(5))
             if m.group(2) == '\u540c\u3000':
                 # same position
@@ -107,16 +114,23 @@ class Parser:
 
             if m.group(6) == '\u6253':
                 # piece drop
-                return ('{0}*{1}'.format(shogi.PIECE_SYMBOLS[piece_type].upper(),
-                    shogi.SQUARE_NAMES[to_square]), last_to_square)
+                return (
+                    '{0}*{1}'.format(shogi.PIECE_SYMBOLS[piece_type].upper(), shogi.SQUARE_NAMES[to_square]),
+                    last_to_square,
+                    None
+                )
             else:
                 from_field = 9 - int(m.group(8))
                 from_rank = int(m.group(9)) - 1
                 from_square = from_rank * 9 + from_field
 
                 promotion = (m.group(7) == '\u6210')
-                return (shogi.SQUARE_NAMES[from_square] + shogi.SQUARE_NAMES[to_square] + ('+' if promotion else ''), last_to_square)
-        return (None, last_to_square)
+                return (
+                    shogi.SQUARE_NAMES[from_square] + shogi.SQUARE_NAMES[to_square] + ('+' if promotion else ''),
+                    last_to_square,
+                    None
+                )
+        return (None, last_to_square, None)
 
     @staticmethod
     def parse_str(kif_str):
@@ -158,9 +172,18 @@ class Parser:
                 # Current turn is white
                 current_turn = shogi.WHITE
             else:
-                (move, last_to_square) = Parser.parse_move_str(line, last_to_square)
+                (move, last_to_square, special_str) = Parser.parse_move_str(line, last_to_square)
                 if move is not None:
                     moves.append(move)
+                    if current_turn == shogi.BLACK:
+                        current_turn = shogi.WHITE
+                    else: # current_turn == shogi.WHITE
+                        current_turn = shogi.BLACK
+                elif special_str == '\u6295\u4e86':
+                    if current_turn == shogi.BLACK:
+                        win = 'w'
+                    else: # current_turn == shogi.WHITE
+                        win = 'b'
                 else:
                     m = Parser.RESULT_RE.match(line)
                     if m:
