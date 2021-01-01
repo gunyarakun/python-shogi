@@ -57,14 +57,14 @@ PIECE_PROMOTED = [
 ]
 
 NUMBER_JAPANESE_NUMBER_SYMBOLS = [
-    '\uff10', '\uff11', '\uff12', '\uff13', '\uff14',
-    '\uff15', '\uff16', '\uff17', '\uff18', '\uff19'
+    '０', '１', '２', '３', '４',
+    '５', '６', '７', '８', '９'
 ]
 NUMBER_JAPANESE_KANJI_SYMBOLS = [
-    '\u96f6', '\u4e00', '\u4e8c', '\u4e09', '\u56db',
-    '\u4e94', '\u516d', '\u4e03', '\u516b', '\u4e5d',
-    '\u5341', '\u5341\u4e00', '\u5341\u4e8c', '\u5341\u4e09', '\u5341\u56db',
-    '\u5341\u4e94', '\u5341\u516d', '\u5341\u4e03', '\u5341\u516b'
+    '零', '一', '二', '三', '四',
+    '五', '六', '七', '八', '九',
+    '十', '十一', '十二', '十三', '十四',
+    '十五', '十六', '十七', '十八'
 ]
 
 STARTING_SFEN = 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1'
@@ -1244,15 +1244,15 @@ class Board(object):
 
     def kif_pieces_in_hand_str(self, color):
         builder = [[
-            '\u5148\u624b\u306e\u6301\u99d2\uff1a',
-            '\u5f8c\u624b\u306e\u6301\u99d2\uff1a',
+            '先手の持駒：',
+            '後手の持駒：',
         ][color]]
 
         for piece_type in range(ROOK, NONE, -1):
             if self.has_piece_in_hand(piece_type, color):
                 piece_count = self.pieces_in_hand[color][piece_type]
                 if piece_count:
-                    builder.append('\u3000')
+                    builder.append('　')
                     piece = Piece(piece_type, color)
                     builder.append(piece.japanese_symbol())
                     if piece_count > 1:
@@ -1281,7 +1281,7 @@ class Board(object):
             if piece:
                 builder.append(piece.japanese_symbol_with_direction())
             else:
-                builder.append(' \u30fb')
+                builder.append(' ・')
 
             if BB_SQUARES[square] & BB_FILE_1:
                 builder.append('|')
