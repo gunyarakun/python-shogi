@@ -430,23 +430,23 @@ class ParserTest(unittest.TestCase):
         try:
             tempdir = tempfile.mkdtemp()
 
-            # .kif
+            # cp932
             path = os.path.join(tempdir, 'test1.kif')
             with codecs.open(path, 'w', 'cp932') as f:
                 f.write(TEST_KIF_STR)
             result = KIF.Parser.parse_file(path)
             self.assertEqual(result[0], TEST_KIF_RESULT)
 
-            # .kifu
-            path = os.path.join(tempdir, 'test2.kifu')
+            # utf-8
+            path = os.path.join(tempdir, 'test2.kif')
             with codecs.open(path, 'w', 'utf-8') as f:
                 f.write(TEST_KIF_STR)
             result = KIF.Parser.parse_file(path)
             self.assertEqual(result[0], TEST_KIF_RESULT)
 
-            # without extension (cp932)
-            path = os.path.join(tempdir, 'kiffile')
-            with codecs.open(path, 'w', 'cp932') as f:
+            # utf-8 (BOM)
+            path = os.path.join(tempdir, 'test3.kif')
+            with codecs.open(path, 'w', 'utf-8-sig') as f:
                 f.write(TEST_KIF_STR)
             result = KIF.Parser.parse_file(path)
             self.assertEqual(result[0], TEST_KIF_RESULT)

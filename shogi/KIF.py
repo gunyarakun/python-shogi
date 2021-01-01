@@ -53,9 +53,13 @@ class Parser:
     @staticmethod
     def parse_file(path):
         prefix, ext = os.path.splitext(path)
-        enc = 'utf-8' if ext == '.kifu' else 'cp932'
-        with codecs.open(path, 'r', enc) as f:
-            return Parser.parse_str(f.read())
+        for enc in ['cp932', 'utf-8-sig']:
+            try:
+                with codecs.open(path, 'r', enc) as f:
+                    return Parser.parse_str(f.read())
+            except:
+                pass
+        return None
 
     @staticmethod
     def parse_pieces_in_hand(target):
