@@ -179,11 +179,18 @@ class Parser:
                         current_turn = shogi.WHITE
                     else: # current_turn == shogi.WHITE
                         current_turn = shogi.BLACK
-                elif special_str == '投了':
+                elif special_str in ['投了', '詰み', '切れ負け', '反則負け']:
                     if current_turn == shogi.BLACK:
                         win = 'w'
                     else: # current_turn == shogi.WHITE
                         win = 'b'
+                elif special_str in ['反則勝ち', '入玉勝ち']:
+                    if current_turn == shogi.BLACK:
+                        win = 'b'
+                    else: # current_turn == shogi.WHITE
+                        win = 'w'
+                elif special_str in ['持将棋', '先日手']:
+                    win = '-'
                 else:
                     m = Parser.RESULT_RE.match(line)
                     if m:
