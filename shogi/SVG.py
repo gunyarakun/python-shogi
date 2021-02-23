@@ -270,7 +270,7 @@ def sfen_to_svg(sfen):
     <text font-family="serif" font-size="14" transform="rotate(180)" x="-16" y="-38">後</text>
     <text font-family="serif" font-size="14" transform="rotate(180)" x="-16" y="-24">手</text>
     <text font-family="serif" font-size="14" transform="rotate(180)" x="-16" y="-52">☖</text>
-
+    <!-- BOARD PIECES -->
     """
 
     reftable = {
@@ -337,6 +337,7 @@ def sfen_to_svg(sfen):
     ownp_idx_WHITE = 0
     ownp_idx_BLACK = 0
     quantity = 1
+    board.append('<!-- PIECES IN HAND -->')
 
     if not sfen_ownp == '-':
         for p in sfen_ownp:
