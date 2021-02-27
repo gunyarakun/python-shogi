@@ -118,6 +118,7 @@ Features
       ...     print(board.svg(), file=tfile) # python 3+
 
   .. image:: data/images/board.svg
+      :align: center
 
 * Detects checkmates, stalemates.
 
