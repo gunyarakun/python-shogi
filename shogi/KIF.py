@@ -83,7 +83,6 @@ class Parser:
         line_sfen = ''
         square_skip = 0
         sente = True
-        print(board_line)
 
         for square in board_line:
             # if there is a piece in the square (no dot)
@@ -124,6 +123,7 @@ class Parser:
         line = line.replace('\u6210\u9280', '\u5168')
         line = line.replace('\u6210\u6842', '\u572d')
         line = line.replace('\u6210\u9999', '\u674f')
+        line = line.replace('+', '')
 
         m = Parser.MOVE_RE.match(line)
         if m and m.group(1) not in [
@@ -180,7 +180,6 @@ class Parser:
                     custom_sfen = False
                     # remove last forward slash
                     sfen = sfen[:-1]
-                    print(sfen)
                 else:
                     custom_sfen = True
                     sfen = ''
@@ -207,6 +206,8 @@ class Parser:
                     sfen = Parser.HANDYCAP_SFENS[value]
                     if sfen is None:
                         raise ParserException('Cannot support handycap type "other"')
+                elif key == '\u5909\u5316':  # henka
+                    break  # TODO: add alternative move suggestions / branches
             elif line == '\u5f8c\u624b\u756a':
                 # Current turn is white
                 current_turn = shogi.WHITE
@@ -227,7 +228,6 @@ class Parser:
                             win = '-'
             line_no += 1
 
-        print(sfen)
         summary = {
             'names': names,
             'sfen': sfen,
