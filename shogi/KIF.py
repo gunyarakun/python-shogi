@@ -116,6 +116,37 @@ class Parser:
         return line_sfen
 
     @staticmethod
+    def complete_custom_sfen(board, pieces_in_hand, turn):
+        if turn == shogi.BLACK:
+            turn_str = 'b'
+        else:
+            turn_str = 'w'
+
+        # add whos turn it is
+        sfen = ''.join((board, ' ', turn_str, ' '))
+
+        # if there are pieces in the hand
+        if sum(pieces_in_hand[shogi.BLACK].values()) + \
+           sum(pieces_in_hand[shogi.WHITE].values()):
+            for key, quantity in pieces_in_hand[shogi.BLACK].items():
+                piece = shogi.PIECE_SYMBOLS[key].upper()
+                if quantity > 1:
+                    sfen = ''.join((sfen, str(quantity), piece))
+                elif quantity == 1:
+                    sfen = ''.join((sfen, piece))
+
+            for key, quantity in pieces_in_hand[shogi.WHITE].items():
+                piece = shogi.PIECE_SYMBOLS[key].lower()
+                sfen = ''.join((sfen, str(quantity), piece))
+        else:
+            sfen = ''.join((sfen, '-'))
+
+        # add the initial move number
+        sfen = ''.join((sfen, ' 1'))
+
+        return sfen
+
+    @staticmethod
     def parse_move_str(line, last_to_square):
         # Normalize king/promoted kanji
         line = line.replace('\u738b', '\u7389')
@@ -178,7 +209,7 @@ class Parser:
             elif line == '+---------------------------+':
                 if custom_sfen:
                     custom_sfen = False
-                    # remove last forward slash
+                    # remove last slash
                     sfen = sfen[:-1]
                 else:
                     custom_sfen = True
@@ -197,11 +228,11 @@ class Parser:
                 elif key == '\u5148\u624b\u306e\u6301\u99d2' or \
                         key == '\u4e0b\u624b\u306e\u6301\u99d2': # sente or shitate's pieces in hand
                     # First player's pieces in hand
-                    pieces_in_hand[shogi.BLACK] == Parser.parse_pieces_in_hand(value)
+                    pieces_in_hand[shogi.BLACK] = Parser.parse_pieces_in_hand(value)
                 elif key == '\u5f8c\u624b\u306e\u6301\u99d2' or \
                         key == '\u4e0a\u624b\u306e\u6301\u99d2': # gote or uwate's pieces in hand
                     # Second player's pieces in hand
-                    pieces_in_hand[shogi.WHITE] == Parser.parse_pieces_in_hand(value)
+                    pieces_in_hand[shogi.WHITE] = Parser.parse_pieces_in_hand(value)
                 elif key == '\u624b\u5408\u5272': # teai wari
                     sfen = Parser.HANDYCAP_SFENS[value]
                     if sfen is None:
@@ -227,6 +258,10 @@ class Parser:
                             # TODO: repetition of moves with continuous check
                             win = '-'
             line_no += 1
+
+        # if using a custom sfen
+        if len(sfen.split(' ')) == 1:
+            sfen = Parser.complete_custom_sfen(sfen, pieces_in_hand, current_turn)
 
         summary = {
             'names': names,
