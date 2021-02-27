@@ -342,10 +342,15 @@ def sfen_to_svg(sfen):
     if not sfen_ownp == '-':
         for p in sfen_ownp:
             if p.isdecimal():
-                quantity = int(p)
+
+                quantity = ''.join((quantity, p))
                 continue
 
             if not p.islower():
+                if quantity:
+                    quantity = int(quantity)
+                else:
+                    quantity = 1
                 x = 212
                 y = 115 - (ownp_idx_WHITE*18)
                 if promoted:
@@ -360,6 +365,10 @@ def sfen_to_svg(sfen):
                     text = t.format((x+2), (y+7), quantity)
                     board.append(text)
             else:
+                if quantity:
+                    quantity = int(quantity)
+                else:
+                    quantity = 1
                 x = 0
                 y = 65 + (ownp_idx_BLACK*18)
                 ref = reftable[p]
@@ -371,7 +380,7 @@ def sfen_to_svg(sfen):
                     t = '<text x="{}" y="{}" font-size="8" fill="red">{}</text>'
                     text = t.format(x, (y+16), quantity)
                     board.append(text)
-            quantity = 1
+            quantity = ''
 
     svg = svg+'\n'.join(board)+'\n</svg>'
     return svg
