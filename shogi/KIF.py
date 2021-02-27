@@ -25,8 +25,10 @@ import re
 import shogi
 import codecs
 
+
 class ParserException(Exception):
     pass
+
 
 class Parser:
     MOVE_RE = re.compile(r'\A *[0-9]+ (\u4e2d\u65ad|\u6295\u4e86|\u6301\u5c06\u68cb|\u5148\u65e5\u624b|\u8a70\u307f|\u5207\u308c\u8ca0\u3051|\u53cd\u5247\u52dd\u3061|\u53cd\u5247\u8ca0\u3051|(([\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19])([\u96f6\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d])|\u540c\u3000)([\u6b69\u9999\u6842\u9280\u91d1\u89d2\u98db\u7389\u3068\u674f\u572d\u5168\u99ac\u9f8d])(\u6253|(\u6210?)\(([0-9])([0-9])\)))\s*(\([ /:0-9]+\))?\s*\Z')
@@ -53,7 +55,7 @@ class Parser:
     @staticmethod
     def parse_file(path):
         prefix, ext = os.path.splitext(path)
-        enc = 'utf-8' if ext == '.kifu' else 'cp932'
+        enc = 'utf-8' if ext == '.kifu' or ext == '.kif' else 'cp932'
         with codecs.open(path, 'r', enc) as f:
             return Parser.parse_str(f.read())
 
@@ -74,6 +76,45 @@ class Parser:
             else:
                 raise ParserException('Invalid pieces in hand')
         return result
+
+    @staticmethod
+    def parse_board_line(line):
+        board_line = line.split('|')[1].replace(' ', '')
+        line_sfen = ''
+        square_skip = 0
+        sente = True
+        print(board_line)
+
+        for square in board_line:
+            # if there is a piece in the square (no dot)
+            if square != '\u30fb':
+                # if there is a square skip, add to sfen
+                if square_skip > 0:
+                    line_sfen = ''.join((line_sfen, str(square_skip)))
+                    square_skip = 0
+
+                if square == 'v':
+                    sente = False
+                    continue
+
+                # get the piece roman symbol
+                piece = shogi.PIECE_SYMBOLS[
+                    shogi.PIECE_JAPANESE_SYMBOLS.index(square[-1])]
+
+                # if sente
+                if sente:
+                    line_sfen = ''.join((line_sfen, piece.upper()))
+                else:
+                    line_sfen = ''.join((line_sfen, piece.lower()))
+                sente = True
+            else:
+                square_skip += 1
+
+        # if last square is also empty, need to add the skip to the end
+        if square_skip > 0:
+            line_sfen = ''.join((line_sfen, str(square_skip)))
+
+        return line_sfen
 
     @staticmethod
     def parse_move_str(line, last_to_square):
@@ -129,10 +170,22 @@ class Parser:
         moves = []
         last_to_square = None
         win = None
+        custom_sfen = False
         kif_str = kif_str.replace('\r\n', '\n').replace('\r', '\n')
         for line in kif_str.split('\n'):
             if len(line) == 0 or line[0] == "*":
                 pass
+            elif line == '+---------------------------+':
+                if custom_sfen:
+                    custom_sfen = False
+                    # remove last forward slash
+                    sfen = sfen[:-1]
+                    print(sfen)
+                else:
+                    custom_sfen = True
+                    sfen = ''
+            elif custom_sfen:
+                sfen = ''.join((sfen, Parser.parse_board_line(line), '/'))
             elif '\uff1a' in line:
                 (key, value) = line.split('\uff1a', 1)
                 value = value.rstrip('\u3000')
@@ -174,6 +227,7 @@ class Parser:
                             win = '-'
             line_no += 1
 
+        print(sfen)
         summary = {
             'names': names,
             'sfen': sfen,
