@@ -1,23 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# This file is part of the python-shogi library.
-#
-# Copyright (C) 2020- Yui Matsumura <yuiseki@gmail.com>
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-def sfen_to_svg(sfen):
-    svg = """
     <svg
         height="384.0"
         width="460.0"
@@ -271,115 +252,45 @@ def sfen_to_svg(sfen):
     <text font-family="serif" font-size="14" transform="rotate(180)" x="-16" y="-24">手</text>
     <text font-family="serif" font-size="14" transform="rotate(180)" x="-16" y="-52">☖</text>
     <!-- BOARD PIECES -->
-    """
-
-    reftable = {
-        'l': 'white-lance',
-        'n': 'white-knight',
-        's': 'white-silver',
-        'g': 'white-gold',
-        'k': 'white-king',
-        'r': 'white-rook',
-        'b': 'white-bishop',
-        'p': 'white-pawn',
-        'L': 'black-lance',
-        'N': 'black-knight',
-        'S': 'black-silver',
-        'G': 'black-gold',
-        'K': 'black-king',
-        'R': 'black-rook',
-        'B': 'black-bishop',
-        'P': 'black-pawn'
-    }
-
-    reftablepromote = {
-        'l': 'white-pro-lance',
-        'n': 'white-pro-knight',
-        's': 'white-pro-silver',
-        'r': 'white-dragon',
-        'b': 'white-horse',
-        'p': 'white-pro-pawn',
-        'L': 'black-pro-lance',
-        'N': 'black-pro-knight',
-        'S': 'black-pro-silver',
-        'R': 'black-dragon',
-        'B': 'black-horse',
-        'P': 'black-pro-pawn'
-    }
-
-    # render pieces on board
-    sfen_conf = sfen.split()[0].split('/')
-    board = []
-    promoted = False
-
-    for row_index, row in enumerate(sfen_conf):
-        colnum = 1
-        for col in row:
-            if col.isdecimal():
-                colnum += int(col)
-            elif col == '+':
-                promoted = True
-            else:
-                x = (colnum) * 20
-                y = ((row_index + 1) * 20) - 10
-                if promoted:
-                    ref = reftablepromote[col]
-                else:
-                    ref = reftable[col]
-                t = '<use href="#{}" x="{}" y="{}" />'
-                use = t.format(ref, x, y)
-                board.append(use)
-                colnum += 1
-                promoted = False
-
-    # render owned pieces
-    sfen_ownp = sfen.split()[2]
-    ownp_idx_WHITE = 0
-    ownp_idx_BLACK = 0
-    quantity = 1
-    board.append('<!-- PIECES IN HAND -->')
-
-    if not sfen_ownp == '-':
-        for p in sfen_ownp:
-            if p.isdecimal():
-                quantity = ''.join((quantity, p))
-                continue
-
-            if not p.islower():
-                if quantity:
-                    quantity = int(quantity)
-                else:
-                    quantity = 1
-                x = 212
-                y = 115 - (ownp_idx_WHITE*18)
-                if promoted:
-                    ref = ''
-                ref = reftable[p]
-                t = '<use href="#{}"  x="{}"  y="{}" />'
-                use = t.format(ref, x, y)
-                ownp_idx_WHITE += 1
-                board.append(use)
-                if quantity > 1:
-                    t = '<text x="{}" y="{}" font-size="8" fill="red">{}</text>'
-                    text = t.format((x+2), (y+7), quantity)
-                    board.append(text)
-            else:
-                if quantity:
-                    quantity = int(quantity)
-                else:
-                    quantity = 1
-                x = 0
-                y = 65 + (ownp_idx_BLACK*18)
-                ref = reftable[p]
-                t = '<use href="#{}"  x="{}"  y="{}" />'
-                use = t.format(ref, x, y)
-                ownp_idx_BLACK += 1
-                board.append(use)
-                if quantity > 1:
-                    t = '<text x="{}" y="{}" font-size="8" fill="red">{}</text>'
-                    text = t.format(x, (y+16), quantity)
-                    board.append(text)
-            quantity = ''
-
-    svg = svg+'\n'.join(board)+'\n</svg>'
-    return svg
+    <use href="#white-lance" x="20" y="10" />
+<use href="#white-knight" x="40" y="10" />
+<use href="#white-silver" x="60" y="10" />
+<use href="#white-gold" x="80" y="10" />
+<use href="#white-king" x="100" y="10" />
+<use href="#white-gold" x="120" y="10" />
+<use href="#white-silver" x="140" y="10" />
+<use href="#white-knight" x="160" y="10" />
+<use href="#white-lance" x="180" y="10" />
+<use href="#white-rook" x="40" y="30" />
+<use href="#white-bishop" x="160" y="30" />
+<use href="#white-pawn" x="20" y="50" />
+<use href="#white-pawn" x="40" y="50" />
+<use href="#white-pawn" x="60" y="50" />
+<use href="#white-pawn" x="80" y="50" />
+<use href="#white-pawn" x="100" y="50" />
+<use href="#white-pawn" x="120" y="50" />
+<use href="#white-pawn" x="140" y="50" />
+<use href="#white-pawn" x="160" y="50" />
+<use href="#white-pawn" x="180" y="50" />
+<use href="#black-pawn" x="20" y="130" />
+<use href="#black-pawn" x="40" y="130" />
+<use href="#black-pawn" x="60" y="130" />
+<use href="#black-pawn" x="80" y="130" />
+<use href="#black-pawn" x="100" y="130" />
+<use href="#black-pawn" x="120" y="130" />
+<use href="#black-pawn" x="140" y="130" />
+<use href="#black-pawn" x="160" y="130" />
+<use href="#black-pawn" x="180" y="130" />
+<use href="#black-bishop" x="40" y="150" />
+<use href="#black-rook" x="160" y="150" />
+<use href="#black-lance" x="20" y="170" />
+<use href="#black-knight" x="40" y="170" />
+<use href="#black-silver" x="60" y="170" />
+<use href="#black-gold" x="80" y="170" />
+<use href="#black-king" x="100" y="170" />
+<use href="#black-gold" x="120" y="170" />
+<use href="#black-silver" x="140" y="170" />
+<use href="#black-knight" x="160" y="170" />
+<use href="#black-lance" x="180" y="170" />
+<!-- PIECES IN HAND -->
+</svg>
