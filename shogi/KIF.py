@@ -25,8 +25,10 @@ import re
 import shogi
 import codecs
 
+
 class ParserException(Exception):
     pass
+
 
 class Parser:
     MOVE_RE = re.compile(r'\A *[0-9]+\s+(中断|投了|持将棋|先日手|詰み|切れ負け|反則勝ち|反則負け|(([１２３４５６７８９])([零一二三四五六七八九])|同　)([歩香桂銀金角飛玉と杏圭全馬龍])(打|(成?)\(([0-9])([0-9])\)))\s*(\([ /:0-9]+\))?\s*\Z')
@@ -78,6 +80,45 @@ class Parser:
             else:
                 raise ParserException('Invalid pieces in hand')
         return result
+
+    @staticmethod
+    def parse_board_line(line):
+        board_line = line.split('|')[1].replace(' ', '')
+        line_sfen = ''
+        square_skip = 0
+        sente = True
+        print(board_line)
+
+        for square in board_line:
+            # if there is a piece in the square (no dot)
+            if square != '\u30fb':
+                # if there is a square skip, add to sfen
+                if square_skip > 0:
+                    line_sfen = ''.join((line_sfen, str(square_skip)))
+                    square_skip = 0
+
+                if square == 'v':
+                    sente = False
+                    continue
+
+                # get the piece roman symbol
+                piece = shogi.PIECE_SYMBOLS[
+                    shogi.PIECE_JAPANESE_SYMBOLS.index(square[-1])]
+
+                # if sente
+                if sente:
+                    line_sfen = ''.join((line_sfen, piece.upper()))
+                else:
+                    line_sfen = ''.join((line_sfen, piece.lower()))
+                sente = True
+            else:
+                square_skip += 1
+
+        # if last square is also empty, need to add the skip to the end
+        if square_skip > 0:
+            line_sfen = ''.join((line_sfen, str(square_skip)))
+
+        return line_sfen
 
     @staticmethod
     def parse_move_str(line, last_to_square):
@@ -147,6 +188,7 @@ class Parser:
         moves = []
         last_to_square = None
         win = None
+        custom_sfen = False
         kif_str = kif_str.replace('\r\n', '\n').replace('\r', '\n')
         for line in kif_str.split('\n'):
             if len(line) == 0 or line[0] == "*":
@@ -208,6 +250,7 @@ class Parser:
                             win = '-'
             line_no += 1
 
+        print(sfen)
         summary = {
             'names': names,
             'sfen': sfen,
