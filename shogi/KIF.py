@@ -87,7 +87,6 @@ class Parser:
         line_sfen = ''
         square_skip = 0
         sente = True
-        print(board_line)
 
         for square in board_line:
             # if there is a piece in the square (no dot)
@@ -123,11 +122,20 @@ class Parser:
     @staticmethod
     def parse_move_str(line, last_to_square):
         # Normalize king/promoted kanji
+<<<<<<< HEAD
         line = line.replace('王', '玉')
         line = line.replace('竜', '龍')
         line = line.replace('成銀', '全')
         line = line.replace('成桂', '圭')
         line = line.replace('成香', '杏')
+=======
+        line = line.replace('\u738b', '\u7389')
+        line = line.replace('\u7adc', '\u9f8d')
+        line = line.replace('\u6210\u9280', '\u5168')
+        line = line.replace('\u6210\u6842', '\u572d')
+        line = line.replace('\u6210\u9999', '\u674f')
+        line = line.replace('+', '')
+>>>>>>> fixed: problems with kif importer when multiple move branches exist
 
         m = Parser.MOVE_RE.match(line)
         if m:
@@ -193,10 +201,27 @@ class Parser:
         for line in kif_str.split('\n'):
             if len(line) == 0 or line[0] == "*":
                 pass
+<<<<<<< HEAD
             elif '：' in line:
                 (key, value) = line.split('：', 1)
                 value = value.rstrip('　')
                 if key == '先手' or key == '下手': # sente or shitate
+=======
+            elif line == '+---------------------------+':
+                if custom_sfen:
+                    custom_sfen = False
+                    # remove last forward slash
+                    sfen = sfen[:-1]
+                else:
+                    custom_sfen = True
+                    sfen = ''
+            elif custom_sfen:
+                sfen = ''.join((sfen, Parser.parse_board_line(line), '/'))
+            elif '\uff1a' in line:
+                (key, value) = line.split('\uff1a', 1)
+                value = value.rstrip('\u3000')
+                if key == '\u5148\u624b' or key == '\u4e0b\u624b': # sente or shitate
+>>>>>>> fixed: problems with kif importer when multiple move branches exist
                     # Blacks's name
                     names[shogi.BLACK] = value
                 elif key == '後手' or key == '上手': # gote or uwate
@@ -214,7 +239,13 @@ class Parser:
                     sfen = Parser.HANDYCAP_SFENS[value]
                     if sfen is None:
                         raise ParserException('Cannot support handycap type "other"')
+<<<<<<< HEAD
             elif line == '後手番':
+=======
+                elif key == '\u5909\u5316':  # henka
+                    break  # TODO: add alternative move suggestions / branches
+            elif line == '\u5f8c\u624b\u756a':
+>>>>>>> fixed: problems with kif importer when multiple move branches exist
                 # Current turn is white
                 current_turn = shogi.WHITE
             else:
@@ -250,7 +281,6 @@ class Parser:
                             win = '-'
             line_no += 1
 
-        print(sfen)
         summary = {
             'names': names,
             'sfen': sfen,
