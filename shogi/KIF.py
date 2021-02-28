@@ -206,7 +206,7 @@ class Parser:
         for line in kif_str.split('\n'):
             if len(line) == 0 or line[0] == "*":
                 pass
-            elif line == '+---------------------------+':
+            elif line.count('+') == 2 and line.count('-') > 10:
                 if custom_sfen:
                     custom_sfen = False
                     # remove last slash
