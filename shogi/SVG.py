@@ -352,8 +352,6 @@ def sfen_to_svg(sfen):
                     quantity = 1
                 x = 212
                 y = 115 - (ownp_idx_WHITE*18)
-                if promoted:
-                    ref = ''
                 ref = reftable[p]
                 t = '<use href="#{}"  x="{}"  y="{}" />'
                 use = t.format(ref, x, y)
