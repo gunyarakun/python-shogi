@@ -55,7 +55,7 @@ class Parser:
     @staticmethod
     def parse_file(path):
         prefix, ext = os.path.splitext(path)
-        enc = 'utf-8' if ext == '.kifu' or ext == '.kif' else 'cp932'
+        enc = 'utf-8' if ext == '.kifu' else 'cp932'
         with codecs.open(path, 'r', enc) as f:
             return Parser.parse_str(f.read())
 
