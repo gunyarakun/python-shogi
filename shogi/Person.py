@@ -471,8 +471,8 @@ class Name:
             return None
         name = name.translate({
             ord(' '): None     , # space
-            ord('\u3000'): None, # full-width space
-            ord('\u30fb'): None, # full-width center dot
+            ord('　'): None, # full-width space
+            ord('・'): None, # full-width center dot
         })
         name = NAME_SUFFIX_RE.sub('', name)
 

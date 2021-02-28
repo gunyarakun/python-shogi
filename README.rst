@@ -7,10 +7,6 @@ python-shogi: a pure Python shogi library
 .. image:: https://coveralls.io/repos/gunyarakun/python-shogi/badge.svg
     :target: https://coveralls.io/r/gunyarakun/python-shogi
 
-.. image:: https://landscape.io/github/gunyarakun/python-shogi/master/landscape.svg?style=flat
-    :target: https://landscape.io/github/gunyarakun/python-shogi/master
-    :alt: Code Health
-
 .. image:: https://badge.fury.io/py/python-shogi.svg
     :target: https://pypi.python.org/pypi/python-shogi
 

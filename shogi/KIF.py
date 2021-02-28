@@ -31,41 +31,45 @@ class ParserException(Exception):
 
 
 class Parser:
-    MOVE_RE = re.compile(r'\A *[0-9]+ (\u4e2d\u65ad|\u6295\u4e86|\u6301\u5c06\u68cb|\u5148\u65e5\u624b|\u8a70\u307f|\u5207\u308c\u8ca0\u3051|\u53cd\u5247\u52dd\u3061|\u53cd\u5247\u8ca0\u3051|(([\uff11\uff12\uff13\uff14\uff15\uff16\uff17\uff18\uff19])([\u96f6\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d])|\u540c\u3000)([\u6b69\u9999\u6842\u9280\u91d1\u89d2\u98db\u7389\u3068\u674f\u572d\u5168\u99ac\u9f8d])(\u6253|(\u6210?)\(([0-9])([0-9])\)))\s*(\([ /:0-9]+\))?\s*\Z')
+    MOVE_RE = re.compile(r'\A *[0-9]+\s+(中断|投了|持将棋|先日手|詰み|切れ負け|反則勝ち|反則負け|(([１２３４５６７８９])([零一二三四五六七八九])|同　)([歩香桂銀金角飛玉と杏圭全馬龍])(打|(成?)\(([0-9])([0-9])\)))\s*(\([ /:0-9]+\))?\s*\Z')
 
     HANDYCAP_SFENS = {
-        '\u5e73\u624b': shogi.STARTING_SFEN,
-        '\u9999\u843d\u3061': 'lnsgkgsn1/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u53f3\u9999\u843d\u3061': '1nsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u89d2\u843d\u3061': 'lnsgkgsnl/1r7/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u98db\u8eca\u843d\u3061': 'lnsgkgsnl/7b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u98db\u9999\u843d\u3061': 'lnsgkgsn1/7b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u4e8c\u679a\u843d\u3061': 'lnsgkgsnl/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u4e09\u679a\u843d\u3061': 'lnsgkgsn1/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u56db\u679a\u843d\u3061': '1nsgkgsn1/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u4e94\u679a\u843d\u3061': '2sgkgsn1/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u5de6\u4e94\u679a\u843d\u3061': '1nsgkgs2/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u516d\u679a\u843d\u3061': '2sgkgs2/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u516b\u679a\u843d\u3061': '4k4/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
-        '\u305d\u306e\u4ed6': None
+        '平手': shogi.STARTING_SFEN,
+        '香落ち': 'lnsgkgsn1/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '右香落ち': '1nsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '角落ち': 'lnsgkgsnl/1r7/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '飛車落ち': 'lnsgkgsnl/7b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '飛香落ち': 'lnsgkgsn1/7b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '二枚落ち': 'lnsgkgsnl/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '三枚落ち': 'lnsgkgsn1/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '四枚落ち': '1nsgkgsn1/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '五枚落ち': '2sgkgsn1/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '左五枚落ち': '1nsgkgs2/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '六枚落ち': '2sgkgs2/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        '八枚落ち': '4k4/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL w - 1',
+        'その他': None
     }
 
-    RESULT_RE = re.compile(r'\u3000*\u307e\u3067(\d+)\u624b\u3067((\u5148|\u4e0b|\u5f8c|\u4e0a)\u624b\u306e\u52dd\u3061|\u5343\u65e5\u624b|\u6301\u5c06\u68cb|\u4e2d\u65ad)')
+    RESULT_RE = re.compile(r'　*まで(\d+)手で((先|下|後|上)手の勝ち|千日手|持将棋|中断)')
 
     @staticmethod
     def parse_file(path):
         prefix, ext = os.path.splitext(path)
-        enc = 'utf-8' if ext == '.kifu' else 'cp932'
-        with codecs.open(path, 'r', enc) as f:
-            return Parser.parse_str(f.read())
+        for enc in ['cp932', 'utf-8-sig']:
+            try:
+                with codecs.open(path, 'r', enc) as f:
+                    return Parser.parse_str(f.read())
+            except:
+                pass
+        return None
 
     @staticmethod
     def parse_pieces_in_hand(target):
-        if target == '\u306a\u3057': # None in japanese
+        if target == 'なし': # None in japanese
             return {}
 
         result = {}
-        for item in target.split('\u3000'):
+        for item in target.split('　'):
             if len(item) == 1:
                 result[shogi.PIECE_JAPANESE_SYMBOLS.index(item)] = 1
             elif len(item) == 2 or len(item) == 3:
@@ -86,7 +90,7 @@ class Parser:
 
         for square in board_line:
             # if there is a piece in the square (no dot)
-            if square != '\u30fb':
+            if square != '・':
                 # if there is a square skip, add to sfen
                 if square_skip > 0:
                     line_sfen = ''.join((line_sfen, str(square_skip)))
@@ -149,26 +153,33 @@ class Parser:
     @staticmethod
     def parse_move_str(line, last_to_square):
         # Normalize king/promoted kanji
-        line = line.replace('\u738b', '\u7389')
-        line = line.replace('\u7adc', '\u9f8d')
-        line = line.replace('\u6210\u9280', '\u5168')
-        line = line.replace('\u6210\u6842', '\u572d')
-        line = line.replace('\u6210\u9999', '\u674f')
+        line = line.replace('王', '玉')
+        line = line.replace('竜', '龍')
+        line = line.replace('成銀', '全')
+        line = line.replace('成桂', '圭')
+        line = line.replace('成香', '杏')
         line = line.replace('+', '')
 
         m = Parser.MOVE_RE.match(line)
-        if m and m.group(1) not in [
-                    '\u4e2d\u65ad',
-                    '\u6295\u4e86',
-                    '\u6301\u5c06\u68cb',
-                    '\u5343\u65e5\u624b',
-                    '\u8a70\u307f',
-                    '\u5207\u308c\u8ca0\u3051',
-                    '\u53cd\u5247\u304b\u52dd\u3061',
-                    '\u53cd\u5247\u8ca0\u3051'
-                ]:
+        if m:
+            if m.group(1) in [
+                    '中断',
+                    '投了',
+                    '持将棋',
+                    '千日手',
+                    '詰み',
+                    '切れ負け',
+                    '反則か勝ち',
+                    '反則負け'
+            ]:
+                return (
+                    None,
+                    None,
+                    m.group(1)
+                )
+
             piece_type = shogi.PIECE_JAPANESE_SYMBOLS.index(m.group(5))
-            if m.group(2) == '\u540c\u3000':
+            if m.group(2) == '同　':
                 # same position
                 to_square = last_to_square
             else:
@@ -177,18 +188,25 @@ class Parser:
                 to_square = to_rank * 9 + to_field
                 last_to_square = to_square
 
-            if m.group(6) == '\u6253':
+            if m.group(6) == '打':
                 # piece drop
-                return ('{0}*{1}'.format(shogi.PIECE_SYMBOLS[piece_type].upper(),
-                    shogi.SQUARE_NAMES[to_square]), last_to_square)
+                return (
+                    '{0}*{1}'.format(shogi.PIECE_SYMBOLS[piece_type].upper(), shogi.SQUARE_NAMES[to_square]),
+                    last_to_square,
+                    None
+                )
             else:
                 from_field = 9 - int(m.group(8))
                 from_rank = int(m.group(9)) - 1
                 from_square = from_rank * 9 + from_field
 
-                promotion = (m.group(7) == '\u6210')
-                return (shogi.SQUARE_NAMES[from_square] + shogi.SQUARE_NAMES[to_square] + ('+' if promotion else ''), last_to_square)
-        return (None, last_to_square)
+                promotion = (m.group(7) == '成')
+                return (
+                    shogi.SQUARE_NAMES[from_square] + shogi.SQUARE_NAMES[to_square] + ('+' if promotion else ''),
+                    last_to_square,
+                    None
+                )
+        return (None, last_to_square, None)
 
     @staticmethod
     def parse_str(kif_str):
@@ -216,43 +234,59 @@ class Parser:
                     sfen = ''
             elif custom_sfen:
                 sfen = ''.join((sfen, Parser.parse_board_line(line), '/'))
-            elif '\uff1a' in line:
-                (key, value) = line.split('\uff1a', 1)
-                value = value.rstrip('\u3000')
-                if key == '\u5148\u624b' or key == '\u4e0b\u624b': # sente or shitate
+            elif '：' in line:
+                (key, value) = line.split('：', 1)
+                value = value.rstrip('　')
+                if key == '先手' or key == '下手': # sente or shitate
                     # Blacks's name
                     names[shogi.BLACK] = value
-                elif key == '\u5f8c\u624b' or key == '\u4e0a\u624b': # gote or uwate
+                elif key == '後手' or key == '上手': # gote or uwate
                     # White's name
                     names[shogi.WHITE] = value
-                elif key == '\u5148\u624b\u306e\u6301\u99d2' or \
-                        key == '\u4e0b\u624b\u306e\u6301\u99d2': # sente or shitate's pieces in hand
+                elif key == '先手の持駒' or \
+                        key == '下手の持駒': # sente or shitate's pieces in hand
                     # First player's pieces in hand
                     pieces_in_hand[shogi.BLACK] = Parser.parse_pieces_in_hand(value)
-                elif key == '\u5f8c\u624b\u306e\u6301\u99d2' or \
-                        key == '\u4e0a\u624b\u306e\u6301\u99d2': # gote or uwate's pieces in hand
+                elif key == '後手の持駒' or \
+                        key == '上手の持駒': # gote or uwate's pieces in hand
                     # Second player's pieces in hand
                     pieces_in_hand[shogi.WHITE] = Parser.parse_pieces_in_hand(value)
-                elif key == '\u624b\u5408\u5272': # teai wari
+                elif key == '手合割': # teai wari
                     sfen = Parser.HANDYCAP_SFENS[value]
                     if sfen is None:
                         raise ParserException('Cannot support handycap type "other"')
-                elif key == '\u5909\u5316':  # henka
+                elif key == '変化':  # henka
                     break  # TODO: add alternative move suggestions / branches
-            elif line == '\u5f8c\u624b\u756a':
+            elif line == '後手番':
                 # Current turn is white
                 current_turn = shogi.WHITE
             else:
-                (move, last_to_square) = Parser.parse_move_str(line, last_to_square)
+                (move, last_to_square, special_str) = Parser.parse_move_str(line, last_to_square)
                 if move is not None:
                     moves.append(move)
+                    if current_turn == shogi.BLACK:
+                        current_turn = shogi.WHITE
+                    else: # current_turn == shogi.WHITE
+                        current_turn = shogi.BLACK
+                elif special_str in ['投了', '詰み', '切れ負け', '反則負け']:
+                    if current_turn == shogi.BLACK:
+                        win = 'w'
+                    else: # current_turn == shogi.WHITE
+                        win = 'b'
+                elif special_str in ['反則勝ち', '入玉勝ち']:
+                    if current_turn == shogi.BLACK:
+                        win = 'b'
+                    else: # current_turn == shogi.WHITE
+                        win = 'w'
+                elif special_str in ['持将棋', '先日手']:
+                    win = '-'
                 else:
                     m = Parser.RESULT_RE.match(line)
                     if m:
                         win_side_str = m.group(3)
-                        if win_side_str == '\u5148' or win_side_str == '\u4e0b':
+                        if win_side_str == '先' or win_side_str == '下':
                             win = 'b'
-                        elif win_side_str == '\u5f8c' or win_side_str == '\u4e0a':
+                        elif win_side_str == '後' or win_side_str == '上':
                             win = 'w'
                         else:
                             # TODO: repetition of moves with continuous check
