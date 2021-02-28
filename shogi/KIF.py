@@ -223,10 +223,27 @@ class Parser:
         for line in kif_str.split('\n'):
             if len(line) == 0 or line[0] == "*":
                 pass
+<<<<<<< HEAD
             elif '：' in line:
                 (key, value) = line.split('：', 1)
                 value = value.rstrip('　')
                 if key == '先手' or key == '下手': # sente or shitate
+=======
+            elif line.count('+') == 2 and line.count('-') > 10:
+                if custom_sfen:
+                    custom_sfen = False
+                    # remove last slash
+                    sfen = sfen[:-1]
+                else:
+                    custom_sfen = True
+                    sfen = ''
+            elif custom_sfen:
+                sfen = ''.join((sfen, Parser.parse_board_line(line), '/'))
+            elif '\uff1a' in line:
+                (key, value) = line.split('\uff1a', 1)
+                value = value.rstrip('\u3000')
+                if key == '\u5148\u624b' or key == '\u4e0b\u624b': # sente or shitate
+>>>>>>> change: changed the way to detect the custom board
                     # Blacks's name
                     names[shogi.BLACK] = value
                 elif key == '後手' or key == '上手': # gote or uwate
