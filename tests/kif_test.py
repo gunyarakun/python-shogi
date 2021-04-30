@@ -358,6 +358,36 @@ TEST_KIF_81DOJO = """#KIF version=2.0 encoding=UTF-8\r
 12   投了   (0:5/0:0:22)\r
 """
 
+
+TEST_KIF_CUSTOM_BOARD = """# ----  Kifu for Windows V4.01β 棋譜ファイル  ----
+# ファイル名：D:\\b\\temp\\M2TOK141\\KIFU\\1t120600-1.kif
+棋戦：１手詰
+戦型：なし
+手合割：平手　　
+後手の持駒：飛　角　金四　銀三　桂四　香三　歩十七　
+  ９ ８ ７ ６ ５ ４ ３ ２ １
++---------------------------+
+| ・ ・ ・ ・ ・ ・ ・ ・v香|一
+| ・ ・ ・ ・ 飛 馬 ・ ・v玉|二
+| ・ ・ ・ ・ ・ ・ ・v歩 ・|三
+| ・ ・ ・ ・ ・ ・v銀 ・ ・|四
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|五
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|六
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|七
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|八
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|九
++---------------------------+
+先手の持駒：なし
+先手：大内延介
+後手：最新詰将棋２００選
+手数----指手---------消費時間--
+*作者：大内延介
+*発表誌：最新詰将棋２００選
+   1 ３一馬(42)   ( 0:00/00:00:00)
+   2 中断         ( 0:00/00:00:00)
+まで1手で中断
+"""
+
 TEST_KIF_RESULT = {
     'moves': [
         '7g7f', '3c3d', '2g2f', '4c4d', '3i4h', '8b4b', '5i6h', '5a6b', '6h7h',
@@ -412,6 +442,11 @@ TEST_KIF_81DOJO_RESULT = {
     'win': 'b',
 }
 
+TEST_KIF_CUSTOM_BOARD_RESULT = {'names': ['大内延介', '最新詰将棋２００選'],
+                                'sfen': '8l/4R+B2k/7p1/6s2/9/9/9/9/9 w 1r1b4g3s4n3l17p 1',
+                                'moves': ['4b3a'],
+                                'win': '-'}
+
 class ParserTest(unittest.TestCase):
     def test_parse_str(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR)
@@ -423,7 +458,6 @@ class ParserTest(unittest.TestCase):
 
     def test_parse_str_81dojo(self):
         result = KIF.Parser.parse_str(TEST_KIF_81DOJO)
-        print(result[0])
         self.assertEqual(result[0], TEST_KIF_81DOJO_RESULT)
 
     def test_parse_file(self):
@@ -450,5 +484,13 @@ class ParserTest(unittest.TestCase):
                 f.write(TEST_KIF_STR)
             result = KIF.Parser.parse_file(path)
             self.assertEqual(result[0], TEST_KIF_RESULT)
+
+            # .kif with custom starting position
+            path = os.path.join(tempdir, 'test_tsume.kif')
+            with codecs.open(path, 'w', 'cp932') as f:
+                f.write(TEST_KIF_CUSTOM_BOARD)
+            result = KIF.Parser.parse_file(path)
+            self.assertEqual(result[0], TEST_KIF_CUSTOM_BOARD_RESULT)
+
         finally:
             shutil.rmtree(tempdir)
