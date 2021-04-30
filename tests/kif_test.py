@@ -413,20 +413,20 @@ TEST_KIF_81DOJO_RESULT = {
 }
 
 class ParserTest(unittest.TestCase):
-    def parse_str_test(self):
+    def test_parse_str(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR)
         self.assertEqual(result[0], TEST_KIF_RESULT)
 
-    def parse_str_with_time_test(self):
+    def test_parse_str_with_time(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR_WITH_TIME)
         self.assertEqual(result[0], TEST_KIF_WITH_TIME_RESULT)
 
-    def parse_str_81dojo_test(self):
+    def test_parse_str_81dojo(self):
         result = KIF.Parser.parse_str(TEST_KIF_81DOJO)
         print(result[0])
         self.assertEqual(result[0], TEST_KIF_81DOJO_RESULT)
 
-    def parse_file_test(self):
+    def test_parse_file(self):
         try:
             tempdir = tempfile.mkdtemp()
 
