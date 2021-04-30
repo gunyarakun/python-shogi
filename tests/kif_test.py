@@ -475,26 +475,26 @@ TEST_KIF_81DOJO_RESULT = {
     'win': 'b',
 }
 TEST_KIF_CUSTOM_BOARD_RESULT = {'names': ['大内延介', '最新詰将棋２００選'],
-                                'sfen': '8l/4R+B2k/7p1/6s2/9/9/9/9/9 b 1r1b4g3s4n3l17p 1',
+                                'sfen': '8l/4R+B2k/7p1/6s2/9/9/9/9/9 w 1r1b4g3s4n3l17p 1',
                                 'moves': ['4b3a'],
                                 'win': '-'}
 
 
 
 class ParserTest(unittest.TestCase):
-    def parse_str_test(self):
+    def test_parse_str(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR)
         self.assertEqual(result[0], TEST_KIF_RESULT)
 
-    def parse_str_with_time_test(self):
+    def test_parse_str_with_time(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR_WITH_TIME)
         self.assertEqual(result[0], TEST_KIF_WITH_TIME_RESULT)
 
-    def parse_str_81dojo_test(self):
+    def test_str_81dojo(self):
         result = KIF.Parser.parse_str(TEST_KIF_81DOJO)
         self.assertEqual(result[0], TEST_KIF_81DOJO_RESULT)
 
-    def parse_file_test(self):
+    def test_parse_file(self):
         try:
             tempdir = tempfile.mkdtemp()
 
