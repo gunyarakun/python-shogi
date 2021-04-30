@@ -336,6 +336,35 @@ TEST_KIF_STR_WITH_TIME = """# --- Kifu for Windows (HTTP) V6.54 棋譜ファイ�
 まで78手で後手の勝ち\r
 """
 
+TEST_KIF_CUSTOM_BOARD = """# ----  Kifu for Windows V4.01β 棋譜ファイル  ----
+# ファイル名：D:\\b\\temp\\M2TOK141\\KIFU\\1t120600-1.kif
+棋戦：１手詰
+戦型：なし
+手合割：平手　　
+後手の持駒：飛　角　金四　銀三　桂四　香三　歩十七　
+  ９ ８ ７ ６ ５ ４ ３ ２ １
++---------------------------+
+| ・ ・ ・ ・ ・ ・ ・ ・v香|一
+| ・ ・ ・ ・ 飛 馬 ・ ・v玉|二
+| ・ ・ ・ ・ ・ ・ ・v歩 ・|三
+| ・ ・ ・ ・ ・ ・v銀 ・ ・|四
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|五
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|六
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|七
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|八
+| ・ ・ ・ ・ ・ ・ ・ ・ ・|九
++---------------------------+
+先手の持駒：なし
+先手：大内延介
+後手：最新詰将棋２００選
+手数----指手---------消費時間--
+*作者：大内延介
+*発表誌：最新詰将棋２００選
+   1 ３一馬(42)   ( 0:00/00:00:00)
+   2 中断         ( 0:00/00:00:00)
+まで1手で中断
+"""
+
 TEST_KIF_81DOJO = """#KIF version=2.0 encoding=UTF-8\r
 開始日時：2020/12/31\r
 場所：81Dojo\r
@@ -432,6 +461,11 @@ TEST_KIF_WITH_TIME_RESULT = {
     'win': 'w',
 }
 
+TEST_KIF_CUSTOM_BOARD_RESULT = {'names': ['大内延介', '最新詰将棋２００選'],
+                                'sfen': '8l/4R+B2k/7p1/6s2/9/9/9/9/9 w 17p3l4n3s4g1b1r 1',
+                                'moves': ['4b3a'],
+                                'win': '-'}
+
 TEST_KIF_81DOJO_RESULT = {
     'moves': [
         '7g7f', '3c3d', '7f7e', '4c4d', '2h7h', '8b4b', '7i6h', '7a8b', '7e7d', '7c7d', '7h7d'
@@ -446,6 +480,7 @@ TEST_KIF_CUSTOM_BOARD_RESULT = {'names': ['大内延介', '最新詰将棋２０
                                 'win': '-'}
 
 
+
 class ParserTest(unittest.TestCase):
     def parse_str_test(self):
         result = KIF.Parser.parse_str(TEST_KIF_STR)
@@ -457,7 +492,6 @@ class ParserTest(unittest.TestCase):
 
     def parse_str_81dojo_test(self):
         result = KIF.Parser.parse_str(TEST_KIF_81DOJO)
-        print(result[0])
         self.assertEqual(result[0], TEST_KIF_81DOJO_RESULT)
 
     def parse_file_test(self):

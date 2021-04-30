@@ -90,7 +90,7 @@ class Parser:
 
         for square in board_line:
             # if there is a piece in the square (no dot)
-            if square != '\u30fb':
+            if square != '・':
                 # if there is a square skip, add to sfen
                 if square_skip > 0:
                     line_sfen = ''.join((line_sfen, str(square_skip)))
@@ -158,6 +158,7 @@ class Parser:
         line = line.replace('成銀', '全')
         line = line.replace('成桂', '圭')
         line = line.replace('成香', '杏')
+        line = line.replace('+', '')
 
         m = Parser.MOVE_RE.match(line)
         if m:
@@ -223,12 +224,6 @@ class Parser:
         for line in kif_str.split('\n'):
             if len(line) == 0 or line[0] == "*":
                 pass
-<<<<<<< HEAD
-            elif '：' in line:
-                (key, value) = line.split('：', 1)
-                value = value.rstrip('　')
-                if key == '先手' or key == '下手': # sente or shitate
-=======
             elif line.count('+') == 2 and line.count('-') > 10:
                 if custom_sfen:
                     custom_sfen = False
@@ -239,11 +234,10 @@ class Parser:
                     sfen = ''
             elif custom_sfen:
                 sfen = ''.join((sfen, Parser.parse_board_line(line), '/'))
-            elif '\uff1a' in line:
-                (key, value) = line.split('\uff1a', 1)
-                value = value.rstrip('\u3000')
-                if key == '\u5148\u624b' or key == '\u4e0b\u624b': # sente or shitate
->>>>>>> change: changed the way to detect the custom board
+            elif '：' in line:
+                (key, value) = line.split('：', 1)
+                value = value.rstrip('　')
+                if key == '先手' or key == '下手': # sente or shitate
                     # Blacks's name
                     names[shogi.BLACK] = value
                 elif key == '後手' or key == '上手': # gote or uwate
@@ -252,15 +246,17 @@ class Parser:
                 elif key == '先手の持駒' or \
                         key == '下手の持駒': # sente or shitate's pieces in hand
                     # First player's pieces in hand
-                    pieces_in_hand[shogi.BLACK] == Parser.parse_pieces_in_hand(value)
+                    pieces_in_hand[shogi.BLACK] = Parser.parse_pieces_in_hand(value)
                 elif key == '後手の持駒' or \
                         key == '上手の持駒': # gote or uwate's pieces in hand
                     # Second player's pieces in hand
-                    pieces_in_hand[shogi.WHITE] == Parser.parse_pieces_in_hand(value)
+                    pieces_in_hand[shogi.WHITE] = Parser.parse_pieces_in_hand(value)
                 elif key == '手合割': # teai wari
                     sfen = Parser.HANDYCAP_SFENS[value]
                     if sfen is None:
                         raise ParserException('Cannot support handycap type "other"')
+                elif key == '変化':  # henka
+                    break  # TODO: add alternative move suggestions / branches
             elif line == '後手番':
                 # Current turn is white
                 current_turn = shogi.WHITE
