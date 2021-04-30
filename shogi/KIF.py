@@ -290,7 +290,6 @@ class Parser:
 
         # if using a custom sfen
         if len(sfen.split(' ')) == 1:
-            print(pieces_in_hand)
             sfen = Parser.complete_custom_sfen(sfen, pieces_in_hand, current_turn)
 
         summary = {
