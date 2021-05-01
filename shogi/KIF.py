@@ -22,8 +22,16 @@ from __future__ import unicode_literals
 
 import os
 import re
+import sys
 import shogi
 import codecs
+
+# python dict pre-version 3.7 is not guaranteed to be sorted by insertion.
+# The OrderedDict implementation fixes this for the older versions.
+if sys.version_info[0] == 2 or (sys.version_info[0] == 3 and sys.version_info[1] < 7):
+    from collections import OrderedDict as ordered_dict
+else:
+    ordered_dict = dict
 
 class ParserException(Exception):
     pass
@@ -64,9 +72,9 @@ class Parser:
     @staticmethod
     def parse_pieces_in_hand(target):
         if target == 'なし': # None in japanese
-            return {}
+            return ordered_dict()
 
-        result = {}
+        result = ordered_dict()
         for item in target.split('　'):
             if len(item) == 1:
                 result[shogi.PIECE_JAPANESE_SYMBOLS.index(item)] = 1
@@ -210,7 +218,7 @@ class Parser:
         line_no = 1
 
         names = [None, None]
-        pieces_in_hand = [{}, {}]
+        pieces_in_hand = [ordered_dict(), ordered_dict()]
         current_turn = shogi.BLACK
         sfen = shogi.STARTING_SFEN
         moves = []
