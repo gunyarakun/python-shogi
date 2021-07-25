@@ -6,8 +6,8 @@ clean:
 build: clean
 	python setup.py sdist
 
-test-upload:
+test-upload: build
 	twine upload --repository testpypi dist/*
 
-upload:
+upload: build
 	twine upload --repository pypi dist/*
