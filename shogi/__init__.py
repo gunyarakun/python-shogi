@@ -974,7 +974,7 @@ class Board(object):
     def push_usi_position_cmd(self, usi_position_cmd):
         '''
         Updates the position from position command in USI protocol.
-        
+
         Example:
         >>> board.push_usi_position_cmd("position startpos moves 7g7f 3c3d")
         '''
@@ -983,7 +983,7 @@ class Board(object):
             moves_id = usi_position_cmd.find("moves")
         else:
             raise ValueError("Invalid command {0} position cmd in USI protocol must starts from 'position startpos' or 'position sfen'".format(repr(usi_position_cmd)))
-    
+
         if sfen_id != -1:
             if moves_id != -1:
                 sfen = usi_position_cmd[sfen_id+5:moves_id]
@@ -998,7 +998,7 @@ class Board(object):
             for move in moves:
                 if move != "":
                     self.push_usi(move)
-    
+
     def push(self, move):
         '''
         Updates the position with the given move and puts it onto a stack.
