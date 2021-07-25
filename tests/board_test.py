@@ -203,5 +203,19 @@ class BoardTestCase(unittest.TestCase):
         move = shogi.Move.from_usi('2g5d+')
         self.assertTrue(move in board.legal_moves)
 
+    def test_usi_command(self):
+        board = shogi.Board()
+        
+        board.push_usi_position_cmd("position startpos moves 7g7f")
+        self.assertEqual(board.sfen(), 'lnsgkgsnl/1r5b1/ppppppppp/9/9/2P6/PP1PPPPPP/1B5R1/LNSGKGSNL w - 2')
+        board.push_usi_position_cmd("position sfen ln1g3+Rl/1ks4s1/pp1gppbpp/2p3N2/9/5P1P1/PPPP1S1bP/2K1R1G2/LNSG3NL w 4p 42")
+        move = shogi.Move.from_usi('2g5d+')
+        self.assertTrue(move in board.legal_moves)
+        board.push_usi_position_cmd("position sfen ln1g3+Rl/1ks4s1/pp1gppbpp/2p3N2/9/5P1P1/PPPP1S1bP/2K1R1G2/LNSG3NL w 4p 42 moves 2g5d+")
+        self.assertEqual(board.sfen(), "ln1g3+Rl/1ks4s1/pp1gppbpp/2p1+b1N2/9/5P1P1/PPPP1S2P/2K1R1G2/LNSG3NL b 4p 43")
+
+        with self.assertRaises(ValueError):
+            board.push_usi_position_cmd("position moves")
+        
 if __name__ == '__main__':
     unittest.main()
