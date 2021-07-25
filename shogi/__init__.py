@@ -971,6 +971,34 @@ class Board(object):
             return False
         return self.piece_bb[PAWN] & self.occupied[self.turn] & BB_FILES[file_index(to_square)]
 
+    def push_usi_position_cmd(self, usi_position_cmd):
+        '''
+        Updates the position from position command in USI protocol.
+        
+        Example:
+        >>> board.push_usi_position_cmd("position startpos moves 7g7f 3c3d")
+        '''
+        if usi_position_cmd.startswith("position startpos") or usi_position_cmd.startswith("position sfen"):
+            sfen_id = usi_position_cmd.find("sfen")
+            moves_id = usi_position_cmd.find("moves")
+        else:
+            raise ValueError("Invalid command {0} position cmd in USI protocol must starts from 'position startpos' or 'position sfen'".format(repr(usi_position_cmd)))
+    
+        if sfen_id != -1:
+            if moves_id != -1:
+                sfen = usi_position_cmd[sfen_id+5:moves_id]
+            else:
+                sfen = usi_position_cmd[sfen_id+5:]
+            self.set_sfen(sfen)
+        else:
+            self.reset()
+
+        if moves_id != -1:
+            moves = usi_position_cmd[moves_id+6:].split(" ")
+            for move in moves:
+                if move != "":
+                    self.push_usi(move)
+    
     def push(self, move):
         '''
         Updates the position with the given move and puts it onto a stack.
