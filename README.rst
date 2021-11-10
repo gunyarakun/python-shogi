@@ -256,8 +256,6 @@ How to release
 ToDo
 ----
 
-- Support USI protocol.
-
 - Support board.generate_attacks() and use it in board.is_attacked_by() and board.attacker_mask().
 
 - Remove rotated bitboards and support `Shatranj-style direct lookup
