@@ -32,6 +32,7 @@ class Move(object):
         # if from_square is None, it's a drop and
         self.from_square = from_square
         self.to_square = to_square
+        self.usi()
         if from_square is None and to_square is not None:
             if drop_piece_type is None:
                 raise ValueError('Drop piece type must be set.')
