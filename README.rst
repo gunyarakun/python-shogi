@@ -213,7 +213,7 @@ Installing
 
   ::
 
-      sudo pip install python-shogi
+      pip install python-shogi
 
 * From current source code:
 
