@@ -19,7 +19,8 @@ python-shogi: a pure Python shogi library
 Introduction
 ------------
 
-This is the module for shogi written in Pure Python. It's based on python-chess commit 6203406259504cddf6f271e6a7b1e04ba0c96165.
+This is the module for shogi written in Pure Python. It's based on python-chess `commit <https://github.com/niklasf/python-chess/commit/6203406259504cddf6f271e6a7b1e04ba0c96165>`__
+
 
 This is the scholars mate in python-shogi:
 
@@ -204,7 +205,7 @@ python-shogi is not intended to be used by serious shogi engines where
 performance is critical. The goal is rather to create a simple and relatively
 highlevel library.
 
-You can install the `gmpy2` or `gmpy` (https://pypi.org/project/gmpy2/) modules
+You can install the `gmpy2 <https://pypi.org/project/gmpy2>`__ or `gmpy <https://pypi.org/project/gmpy>`__ modules
 in order to get a slight performance boost on basic operations like bit scans
 and population counts.
 
