@@ -38,3 +38,7 @@ jobs:
       run: |
         pip install --editable .
         pytest
+
+    - name: Doc Test
+      run: |
+        python -m doctest README.rst .
