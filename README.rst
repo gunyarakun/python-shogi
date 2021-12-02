@@ -10,6 +10,12 @@ python-shogi: a pure Python shogi library
 .. image:: https://badge.fury.io/py/python-shogi.svg
     :target: https://pypi.python.org/pypi/python-shogi
 
+.. image:: https://github.com/gunyarakun/python-shogi/actions/workflows/pythonpackage.yml/badge.svg
+    :target: https://github.com/gunyarakun/python-shogi/actions/workflows/pythonpackage.yml
+    
+.. image:: https://github.com/gunyarakun/python-shogi/actions/workflows/codeql-analysis.yml/badge.svg
+    :target: https://github.com/gunyarakun/python-shogi/actions/workflows/codeql-analysis.yml    
+
 Introduction
 ------------
 
