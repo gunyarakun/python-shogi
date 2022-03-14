@@ -165,6 +165,7 @@ class Parser:
         line = line.replace('成銀', '全')
         line = line.replace('成桂', '圭')
         line = line.replace('成香', '杏')
+        line = line.replace('不成', '')  # normalize explicit non-promotions
 
         m = Parser.MOVE_RE.match(line)
         if m:
