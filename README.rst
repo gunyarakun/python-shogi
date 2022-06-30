@@ -10,10 +10,17 @@ python-shogi: a pure Python shogi library
 .. image:: https://badge.fury.io/py/python-shogi.svg
     :target: https://pypi.python.org/pypi/python-shogi
 
+.. image:: https://github.com/gunyarakun/python-shogi/actions/workflows/pythonpackage.yml/badge.svg
+    :target: https://github.com/gunyarakun/python-shogi/actions/workflows/pythonpackage.yml
+    
+.. image:: https://github.com/gunyarakun/python-shogi/actions/workflows/codeql-analysis.yml/badge.svg
+    :target: https://github.com/gunyarakun/python-shogi/actions/workflows/codeql-analysis.yml    
+
 Introduction
 ------------
 
-This is the module for shogi written in Pure Python. It's based on python-chess commit 6203406259504cddf6f271e6a7b1e04ba0c96165.
+This is the module for shogi written in Pure Python. It's based on python-chess `commit <https://github.com/niklasf/python-chess/commit/6203406259504cddf6f271e6a7b1e04ba0c96165>`__
+
 
 This is the scholars mate in python-shogi:
 
@@ -198,7 +205,7 @@ python-shogi is not intended to be used by serious shogi engines where
 performance is critical. The goal is rather to create a simple and relatively
 highlevel library.
 
-You can install the `gmpy2` or `gmpy` (https://code.google.com/p/gmpy/) modules
+You can install the `gmpy2 <https://pypi.org/project/gmpy2>`__ or `gmpy <https://pypi.org/project/gmpy>`__ modules
 in order to get a slight performance boost on basic operations like bit scans
 and population counts.
 
@@ -213,7 +220,7 @@ Installing
 
   ::
 
-      sudo pip install python-shogi
+      pip install python-shogi
 
 * From current source code:
 
@@ -255,8 +262,6 @@ How to release
 
 ToDo
 ----
-
-- Support USI protocol.
 
 - Support board.generate_attacks() and use it in board.is_attacked_by() and board.attacker_mask().
 
