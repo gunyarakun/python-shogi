@@ -65,7 +65,27 @@ class Parser:
     def parse_file(path):
         with open(path) as f:
             return Parser.parse_str(f.read())
-
+        
+    @staticmethod
+    def parse_comment(comment, sfen):
+        board = shogi.Board(sfen)
+        # parse comment to get pv and value
+        m = re.match(r"'\*\*\s(\-?[\d]+)\s?(.*)", comment)
+        # m is pv and value
+        if m is not None:
+            value = m.groups()[0]
+            move_csa_list = m.groups()[1].split(" ")
+            move_str_list = []
+            for move_csa in move_csa_list:
+                if move_csa == "":
+                    continue
+                (color, move) = Parser.parse_move_str(move_csa, board)
+                board.push(shogi.Move.from_usi(move))
+                move_str_list.append(move)
+            return int(value), move_str_list, None
+        else:
+            return None, None, comment
+        
     @staticmethod
     def parse_str(csa_str):
         line_no = 1
@@ -77,11 +97,31 @@ class Parser:
         current_turn_str = None
         moves = []
         lose_color = None
+        move_start = False
+        values = []
+        pvs = []
+        comments = []
+        temp_values = []
+        temp_pvs = []
+        temp_comments = []
+
         for line in csa_str.split('\n'):
             if line == '':
                 pass
             elif line[0] == "'":
-                pass
+                if move_start:
+                    try:
+                        value, pv, comment = Parser.parse_comment(line, board.sfen())
+                        if value is not None:
+                            temp_values.append(value)
+                        if pv is not None:
+                            temp_pvs.append(pv)
+                        if comment is not None:
+                            temp_comments.append(comment)
+                    except Exception:
+                        # skip the invalid comments
+                        pass
+                        
             elif line[0] == 'V':
                 # Currently just ignoring version
                 pass
@@ -91,7 +131,7 @@ class Parser:
                 # Currently just ignoring information
                 pass
             elif line[0] == 'P':
-                position_lines.append(line)
+                position_lines.append(line)                
             elif line[0] in COLOR_SYMBOLS:
                 if len(line) == 1:
                     current_turn_str = line[0]
@@ -101,6 +141,13 @@ class Parser:
                     (color, move) = Parser.parse_move_str(line, board)
                     moves.append(move)
                     board.push(shogi.Move.from_usi(move))
+                    move_start = True
+                    pvs.append([v for v in temp_pvs])
+                    values.append([v for v in temp_values])
+                    comments.append([v for v in temp_comments])
+                    temp_pvs = []
+                    temp_values = []
+                    temp_comments = []
             elif line[0] == 'T':
                 # Currently just ignoring consumed time
                 pass
@@ -116,6 +163,9 @@ class Parser:
                     lose_color = shogi.BLACK
                 elif line == '%-ILLEGAL_ACTION':
                     lose_color = shogi.WHITE
+                pvs.append([v for v in temp_pvs])
+                values.append([v for v in temp_values])
+                comments.append([v for v in temp_comments])
 
                 # TODO: Support %MATTA etc.
                 break
@@ -144,7 +194,10 @@ class Parser:
             'names': names,
             'sfen': sfen,
             'moves': moves,
-            'win': win
+            'win': win,
+            'values' : values[1:],
+            'pvs' : pvs[1:],
+            'comments' : comments[1:],
         }
         # NOTE: for future support of multiple matches
         return [summary]
