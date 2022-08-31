@@ -188,6 +188,30 @@ Features
       >>> kif['win']
       'b'
 
+* Export to KIFs.
+
+  .. code:: python
+
+      >>> import shogi
+      >>> import shogi.KIF
+
+      >>> board = shogi.Board()
+      >>> shogi.KIF.Exporter.kif_move_from('7g7f', board)
+      '７六歩(77)'
+
+      >>> sfen_summary = {'moves': ['7g7f', '3c3d'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['羽生善治', '藤井猛'], 'win': 'b'}
+      >>> shogi.KIF.Exporter.kif(sfen_summary)
+      開始日時： \r
+      終了日時： \r
+      手合割：平手\r
+      先手：羽生善治\r
+      後手：藤井猛\r
+      手数----指手---------消費時間-- \r
+      1 ７六歩(77) \r
+      2 ３四歩(33) \r
+      3 投了 \r
+      まで2手で後手の勝ち\r
+
 * Communicate with a CSA protocol.
 
   Please see `random_csa_tcp_match <https://github.com/gunyarakun/python-shogi/blob/master/scripts/random_csa_tcp_match>`_.

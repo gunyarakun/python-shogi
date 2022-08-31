@@ -311,3 +311,53 @@ class Parser:
 
         # NOTE: for the same interface with CSA parser
         return [summary]
+
+class Exporter:
+    FULL_WIDTH_NUMBER = "１２３４５６７８９"
+    JAPANESE_NUMBER = "一二三四五六七八九"
+
+    @staticmethod
+    def kif(sfen_summary):
+        names = sfen_summary['names']
+        kif = ""
+        kif += "開始日時： \r\n"
+        kif = kif + "終了日時： \r\n"
+        kif += "手合割：平手\r\n"
+        kif += f"先手：{names[shogi.BLACK]}\r\n"
+        kif += f"後手：{names[shogi.WHITE]}\r\n"
+        kif += "手数----指手---------消費時間-- \r\n"
+
+        sfen = sfen_summary['sfen']
+        board = shogi.Board(sfen)
+
+        moves = sfen_summary['moves']
+        for i, move in enumerate(moves):
+            kif += f"{i+1} {Exporter.kif_move_from(move, board)} \r\n"
+            board.push_usi(move)
+        # NOTE: only resign.
+        kif += f"{len(moves) + 1} 投了 \r\n"
+        win = "先手" if len(moves) % 2 == 1 else "後手"
+        kif += f"まで{len(moves)}手で{win}の勝ち\r\n"
+
+        return kif
+
+    @staticmethod
+    def kif_move_from(sfen_move, board):
+        to_x = int(sfen_move[2])
+        to_x_full_width_number = Exporter.FULL_WIDTH_NUMBER[to_x - 1]
+        to_y = Exporter.number_from(sfen_move[3])
+        to_y_japanese_number = Exporter.JAPANESE_NUMBER[to_y - 1]
+        if sfen_move[1] == "*":
+            # piece drop
+            piece = shogi.PIECE_JAPANESE_SYMBOLS[shogi.PIECE_SYMBOLS.index(sfen_move[0].lower())]
+            return f'{to_x_full_width_number}{to_y_japanese_number}{piece}打'
+        # move piece on the board
+        from_x = int(sfen_move[0])
+        from_y = Exporter.number_from(sfen_move[1])
+        piece_name = board.piece_at(9 - from_x + (from_y - 1) * 9).japanese_symbol()
+        promoted = "成" if len(sfen_move) == 5 and sfen_move[4] == "+" else ""
+        return f'{to_x_full_width_number}{to_y_japanese_number}{piece_name}{promoted}({from_x}{from_y})'
+
+    @staticmethod
+    def number_from(alphabet):
+        return {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8, 'i': 9 }[alphabet]
