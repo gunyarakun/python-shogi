@@ -56,15 +56,18 @@ P9+KY+KE+GI+KI+OU+KI+GI+KE+KY
 +
 '指し手と消費時間(optional)
 +2726FU
+'** 22 -8384FU
 T12
 -3334FU
 T6
+'** 0 +2625FU -8384FU +6978KI -8485FU +3938GI -7172GI +9796FU
 +7776FU
+'using csa format is a kind of torment!
 %TORYO
 '---------------------------------------------------------
 """
 
-TEST_CSA_SUMMARY = {'moves': ['2g2f', '3c3d', '7g7f'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['NAKAHARA', 'YONENAGA'], 'win': 'b'}
+TEST_CSA_SUMMARY = {'moves': ['2g2f', '3c3d', '7g7f'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['NAKAHARA', 'YONENAGA'], 'win': 'b', 'values': [[22], [0], []], 'comments' : ['', '', ["'using csa format is a kind of torment!"]], 'pvs': [[['8c8d']], [['2f2e', '8c8d', '6i7h', '8d8e', '3i3h', '7a7b', '9g9f']], []], 'comments': [[], [], ["'using csa format is a kind of torment!"]]}
 
 TEST_CSA_WITH_PI = '''
 V2.2
@@ -85,15 +88,19 @@ TEST_CSA_SUMMARY_WITH_PI = {
     'moves': ['7g7f', '8c8d'],
     'sfen': 'lnsgkgsnl/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1',
     'names': ['先手', '後手'],
-    'win': 'w'
+    'win': 'w',
+    'comments' : [[],[]],
+    'pvs' : [[], []],
+    'values' : [[], []],
 }
 
 class ParserTest(unittest.TestCase):
-    def parse_str_test(self):
+    def test_parse_str_test(self):
         result = CSA.Parser.parse_str(TEST_CSA)
+        print(result[0])
         self.assertEqual(result[0], TEST_CSA_SUMMARY)
 
-    def parse_str_test_with_PI(self):
+    def test_parse_str_test_with_PI(self):
         result = CSA.Parser.parse_str(TEST_CSA_WITH_PI)
         self.assertEqual(result[0], TEST_CSA_SUMMARY_WITH_PI)
 
