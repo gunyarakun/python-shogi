@@ -28,6 +28,8 @@ import collections
 from .Move import *
 from .Piece import *
 from .Consts import *
+from .SVG import *
+
 
 PIECE_TYPES_WITHOUT_KING = [
            PAWN,      LANCE,      KNIGHT,      SILVER,
@@ -1151,6 +1153,10 @@ class Board(object):
         sfen.append(str(self.move_number))
 
         return ''.join(sfen)
+
+    def svg(self):
+        svg = SVG.sfen_to_svg(self.sfen())
+        return svg
 
     def set_sfen(self, sfen):
         '''
