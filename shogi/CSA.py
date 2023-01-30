@@ -24,6 +24,7 @@ import shogi
 import socket
 import threading
 import collections
+import codecs
 
 DEFAULT_PORT = 4081
 PING_SLEEP_DURATION = 1
@@ -63,8 +64,13 @@ SERVER_MESSAGES = [
 class Parser:
     @staticmethod
     def parse_file(path):
-        with open(path) as f:
-            return Parser.parse_str(f.read())
+        for enc in ['cp932', 'utf-8-sig']:
+            try:
+                with codecs.open(path, 'r', enc) as f:
+                    return Parser.parse_str(f.read())
+            except:
+                pass
+        return None
 
     @staticmethod
     def parse_str(csa_str):
