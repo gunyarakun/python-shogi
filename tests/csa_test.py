@@ -16,9 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import shogi
+# flake8: noqa W291
+
 import unittest
+
 from mock import patch
+
+import shogi
 from shogi import CSA
 
 TEST_CSA = """'----------棋譜ファイルの例"example.csa"-----------------
@@ -62,9 +66,14 @@ T6
 '---------------------------------------------------------
 """
 
-TEST_CSA_SUMMARY = {'moves': ['2g2f', '3c3d', '7g7f'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['NAKAHARA', 'YONENAGA'], 'win': 'b'}
+TEST_CSA_SUMMARY = {
+    "moves": ["2g2f", "3c3d", "7g7f"],
+    "sfen": "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1",
+    "names": ["NAKAHARA", "YONENAGA"],
+    "win": "b",
+}
 
-TEST_CSA_WITH_PI = '''
+TEST_CSA_WITH_PI = """
 V2.2
 N+先手
 N-後手
@@ -77,14 +86,15 @@ T1
 T11
 %TORYO
 T0
-'''
+"""
 
 TEST_CSA_SUMMARY_WITH_PI = {
-    'moves': ['7g7f', '8c8d'],
-    'sfen': 'lnsgkgsnl/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1',
-    'names': ['先手', '後手'],
-    'win': 'w'
+    "moves": ["7g7f", "8c8d"],
+    "sfen": "lnsgkgsnl/9/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1",
+    "names": ["先手", "後手"],
+    "win": "w",
 }
+
 
 class ParserTest(unittest.TestCase):
     def parse_str_test(self):
@@ -95,14 +105,15 @@ class ParserTest(unittest.TestCase):
         result = CSA.Parser.parse_str(TEST_CSA_WITH_PI)
         self.assertEqual(result[0], TEST_CSA_SUMMARY_WITH_PI)
 
+
 TEST_SUMMARY = {
-    'names': ['kiki_no_onaka_black', 'kiki_no_omata_white'],
-    'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1',
-    'moves': [],
-    'time': {'Time_Unit': '1sec', 'Total_Time': '900', 'Byoyomi': '0', 'Least_Time_Per_Move': '1'}
+    "names": ["kiki_no_onaka_black", "kiki_no_omata_white"],
+    "sfen": "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1",
+    "moves": [],
+    "time": {"Time_Unit": "1sec", "Total_Time": "900", "Byoyomi": "0", "Least_Time_Per_Move": "1"},
 }
 
-TEST_SUMMARY_STR = '''BEGIN Game_Summary
+TEST_SUMMARY_STR = """BEGIN Game_Summary
 Protocol_Version:1.1
 Protocol_Mode:Server
 Format:Shogi 1.0
@@ -133,14 +144,15 @@ P9+KY+KE+GI+KI+OU+KI+GI+KE+KY
 +
 END Position
 END Game_Summary
-'''
+"""
+
 
 class TCPProtocolTest(unittest.TestCase):
     def setUp(self):
         patchers = []
-        patchers.append(patch.object(CSA.TCPProtocol, 'connect', return_value=None))
-        patchers.append(patch.object(CSA.TCPProtocol, 'write'))
-        patchers.append(patch.object(CSA.TCPProtocol, 'read', return_value=0))
+        patchers.append(patch.object(CSA.TCPProtocol, "connect", return_value=None))
+        patchers.append(patch.object(CSA.TCPProtocol, "write"))
+        patchers.append(patch.object(CSA.TCPProtocol, "read", return_value=0))
         for patcher in patchers:
             self.addCleanup(patcher.stop)
             patcher.start()
@@ -151,59 +163,57 @@ class TCPProtocolTest(unittest.TestCase):
         csa_protocol.recv_buf += response
 
     def test_login(self):
-        tcp = CSA.TCPProtocol('127.0.0.1')
-        self.add_response(tcp, 'LOGIN:python-syogi OK\n')
-        login_result = tcp.login('python-syogi', 'password')
+        tcp = CSA.TCPProtocol("127.0.0.1")
+        self.add_response(tcp, "LOGIN:python-syogi OK\n")
+        login_result = tcp.login("python-syogi", "password")
         self.assertTrue(login_result)
 
     def test_fail_login(self):
-        tcp = CSA.TCPProtocol('127.0.0.1')
-        self.add_response(tcp, 'LOGIN:incorrect\n')
+        tcp = CSA.TCPProtocol("127.0.0.1")
+        self.add_response(tcp, "LOGIN:incorrect\n")
         with self.assertRaises(ValueError):
-            tcp.login('python-syogi', 'password')
+            tcp.login("python-syogi", "password")
 
     def test_wait_match(self):
-        tcp = CSA.TCPProtocol('127.0.0.1')
+        tcp = CSA.TCPProtocol("127.0.0.1")
         self.add_response(tcp, TEST_SUMMARY_STR)
         game_summary = tcp.wait_match()
-        self.assertEqual(game_summary, {
-            'summary': TEST_SUMMARY,
-            'my_color': shogi.WHITE
-        })
+        self.assertEqual(game_summary, {"summary": TEST_SUMMARY, "my_color": shogi.WHITE})
 
     def test_match(self):
-        tcp = CSA.TCPProtocol('127.0.0.1')
-        self.add_response(tcp, 'LOGIN:username OK\n')
-        tcp.login('username', 'password')
+        tcp = CSA.TCPProtocol("127.0.0.1")
+        self.add_response(tcp, "LOGIN:username OK\n")
+        tcp.login("username", "password")
         self.add_response(tcp, TEST_SUMMARY_STR)
         game_summary = tcp.wait_match()
 
-        board = shogi.Board(game_summary['summary']['sfen'])
-        self.add_response(tcp, 'START:20150505-CSA25-3-5-7\n')
+        board = shogi.Board(game_summary["summary"]["sfen"])
+        self.add_response(tcp, "START:20150505-CSA25-3-5-7\n")
         tcp.agree()
 
-        self.add_response(tcp, '+5756FU,T1\n')
+        self.add_response(tcp, "+5756FU,T1\n")
         (turn, usi, spend_time, message) = tcp.wait_server_message(board)
         board.push(shogi.Move.from_usi(usi))
         self.assertEqual(turn, shogi.BLACK)
         self.assertEqual(spend_time, 1.0)
 
-        self.assertEqual(board.sfen(), 'lnsgkgsnl/1r5b1/ppppppppp/9/9/4P4/PPPP1PPPP/1B5R1/LNSGKGSNL w - 2')
+        self.assertEqual(board.sfen(), "lnsgkgsnl/1r5b1/ppppppppp/9/9/4P4/PPPP1PPPP/1B5R1/LNSGKGSNL w - 2")
 
-        next_move = shogi.Move.from_usi('8c8d')
+        next_move = shogi.Move.from_usi("8c8d")
         board.push(next_move)
-        self.add_response(tcp, '-8384FU,T2\n')
+        self.add_response(tcp, "-8384FU,T2\n")
         response_line = tcp.move(board.pieces[next_move.to_square], shogi.WHITE, next_move)
         (turn, usi, spend_time, message) = tcp.parse_server_message(response_line, board)
         self.assertEqual(turn, shogi.WHITE)
         self.assertEqual(spend_time, 2.0)
 
         # without spent time ex.) Shogidokoro
-        self.add_response(tcp, '+5655FU\n')
+        self.add_response(tcp, "+5655FU\n")
         (turn, usi, spend_time, message) = tcp.wait_server_message(board)
         board.push(shogi.Move.from_usi(usi))
         self.assertEqual(turn, shogi.BLACK)
         self.assertEqual(spend_time, None)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

@@ -16,13 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import shogi
 import unittest
+
+import shogi
+
 
 class MoveTestCase(unittest.TestCase):
     def test_issue_8(self):
-        move = shogi.Move.from_usi('9a9b')
+        move = shogi.Move.from_usi("9a9b")
         self.assertEqual(move.__hash__(), 9)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

@@ -1,2 +1,10 @@
+# I would like to put all the dependencies into pyproject.toml, but the Python version conflicts.
+
+# For tests
 mock==5.0.1
 nose-py3==1.6.0
+
+# For format
+pyproject-flake8==6.0.0
+black==23.1.0
+isort==5.12.0

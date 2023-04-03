@@ -1,28 +1,24 @@
 # -*- coding: utf-8 -*-
 
-from .Consts import *
+from .Consts import BLACK, PROM_PAWN, WHITE
 
-PIECE_SYMBOLS = ['',   'p',  'l',  'n',  's', 'g',  'b',  'r', 'k',
-                      '+p', '+l', '+n', '+s',      '+b', '+r']
-PIECE_JAPANESE_SYMBOLS = [
-    '',
-    '歩', '香', '桂', '銀', '金', '角', '飛',
-    '玉', 'と', '杏', '圭', '全', '馬', '龍'
-]
+PIECE_SYMBOLS = ["", "p", "l", "n", "s", "g", "b", "r", "k", "+p", "+l", "+n", "+s", "+b", "+r"]
+PIECE_JAPANESE_SYMBOLS = ["", "歩", "香", "桂", "銀", "金", "角", "飛", "玉", "と", "杏", "圭", "全", "馬", "龍"]
+
 
 class Piece(object):
     def __init__(self, piece_type, color):
         if piece_type is None:
-            raise ValueError('Piece type must be set')
+            raise ValueError("Piece type must be set")
         if color is None:
-            raise ValueError('Color must be set')
+            raise ValueError("Color must be set")
         self.piece_type = piece_type
         self.color = color
 
     def symbol(self):
-        '''
+        """
         Gets the symbol `p`, `l`, `n`, etc.
-        '''
+        """
         if self.color == BLACK:
             return PIECE_SYMBOLS[self.piece_type].upper()
         else:
@@ -34,9 +30,9 @@ class Piece(object):
 
     def japanese_symbol_with_direction(self):
         if self.color == BLACK:
-            prefix = ' '
+            prefix = " "
         else:
-            prefix = 'v'
+            prefix = "v"
         return prefix + PIECE_JAPANESE_SYMBOLS[self.piece_type]
 
     def is_promoted(self):
@@ -62,10 +58,10 @@ class Piece(object):
 
     @classmethod
     def from_symbol(cls, symbol):
-        '''
+        """
         Creates a piece instance from a piece symbol.
         Raises `ValueError` if the symbol is invalid.
-        '''
+        """
         if symbol.lower() == symbol:
             return cls(PIECE_SYMBOLS.index(symbol), WHITE)
         else:

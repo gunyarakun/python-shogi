@@ -1,19 +1,19 @@
-.PHONY: all clean build test-upload upload test install
+.PHONY: all test-upload upload test install-poetry install format
 
-clean:
-	rm -rf dist
+test-upload:
+	poetry publish --build -r testpypi
 
-build: clean
-	python setup.py sdist
-
-test-upload: build
-	twine upload --repository testpypi dist/*
-
-upload: build
-	twine upload --repository pypi dist/*
+upload:
+	poetry publish --build -r pypi
 
 test:
-	nosetests
+	poetry run nosetests
 
-install:
+install-poetry:
+	curl -sSL https://install.python-poetry.org | python -
+
+install: install-poetry
 	pip install -r requirements.txt
+
+format:
+	poetry run isort . && poetry run black . && poetry run pflake8 .

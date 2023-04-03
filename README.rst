@@ -243,34 +243,29 @@ Installing
 
       pip install python-shogi
 
-* From current source code:
-
-  ::
-
-      python setup.py sdist
-      sudo python setup.py install
-
 How to test
 -----------
 
 ::
 
-  > nosetests
+  > make test
 
 If you want to print lines from the standard output, execute nosetests like following.
 
 ::
 
-  > nosetests -s
+  > poetry run nosetests -s
 
 How to release
 --------------
 
 ::
 
-  rm -rf dist
-  python setup.py sdist
-  twine upload dist/*
+  poetry config repositories.testpypi https://test.pypi.org/legacy/
+  # poetry config pypi-token.testpypi "Test PyPI API Token"
+  make test-upload
+  # poetry config pypi-token.pypi "PyPI API Token"
+  make upload
 
 ToDo
 ----
