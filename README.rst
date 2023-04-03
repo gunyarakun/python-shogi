@@ -196,7 +196,7 @@ Features
       >>> shogi.KIF.Exporter.kif_move_from('7g7f', board)
       '７六歩(77)'
 
-      >>> sfen_summary = {'moves': ['7g7f', '3c3d'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['羽生善治', '藤井猛'], 'win': 'b'}
+      >>> sfen_summary = {'moves': ['7g7f', '3c3d'], 'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1', 'names': ['羽生善治', '藤井猛'], 'win': 'w'}
       >>> shogi.KIF.Exporter.kif(sfen_summary)
       開始日時： \r
       終了日時： \r
