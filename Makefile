@@ -4,7 +4,7 @@ test-upload:
 	poetry publish --build -r testpypi
 
 upload:
-	poetry publish --build -r pypi
+	poetry publish --build
 
 test:
 	poetry run nosetests
