@@ -1,9 +1,6 @@
 python-shogi: a pure Python shogi library
 =========================================
 
-.. image:: https://travis-ci.org/gunyarakun/python-shogi.svg
-    :target: https://travis-ci.org/gunyarakun/python-shogi
-
 .. image:: https://coveralls.io/repos/gunyarakun/python-shogi/badge.svg
     :target: https://coveralls.io/r/gunyarakun/python-shogi
 
