@@ -27,7 +27,7 @@ import shogi
 
 # python dict pre-version 3.7 is not guaranteed to be sorted by insertion.
 # The OrderedDict implementation fixes this for the older versions.
-if sys.version_info[0] == 2 or (sys.version_info[0] == 3 and sys.version_info[1] < 7):
+if sys.version_info[0] == 3 and sys.version_info[1] < 7:
     from collections import OrderedDict as ordered_dict
 else:
     ordered_dict = dict
