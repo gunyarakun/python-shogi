@@ -263,13 +263,6 @@ If you want to print lines from the standard output, execute nosetests like foll
 
   > nosetests -s
 
-If you want to test among different Python versions, execute tox.
-
-::
-
-  > pip install tox
-  > tox
-
 How to release
 --------------
 
