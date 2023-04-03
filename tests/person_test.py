@@ -16,10 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from shogi import Person
 import unittest
+
+from shogi import Person
+
 
 class NameTestCase(unittest.TestCase):
     def test_is_professional(self):
-        result = Person.Name.is_professional('羽生　善治 名人・棋聖・王位・王座')
+        result = Person.Name.is_professional("羽生　善治 名人・棋聖・王位・王座")
         self.assertTrue(result)

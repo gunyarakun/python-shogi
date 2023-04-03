@@ -16,14 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import shogi
-
-import os
 import codecs
+import os
 import shutil
-import unittest
 import tempfile
-from mock import patch
+import unittest
+
 from shogi import KIF
 
 TEST_KIF_STR = """開始日時：2006/12/15 21:03\r
@@ -578,63 +576,294 @@ TEST_KIF_EXPORTED_TO_KIF = """開始日時： \r
 """
 
 TEST_KIF_RESULT = {
-    'moves': [
-        '7g7f', '3c3d', '2g2f', '4c4d', '3i4h', '8b4b', '5i6h', '5a6b', '6h7h',
-        '6b7b', '5g5f', '3a3b', '4h5g', '3b4c', '8h7g', '7b8b', '2f2e', '2b3c',
-        '7h8h', '4c5d', '6g6f', '9a9b', '9i9h', '8b9a', '8h9i', '7a8b', '7i8h',
-        '6a7a', '4i5h', '7c7d', '5h6h', '4a5b', '9g9f', '9c9d', '6i7i', '5b6b',
-        '6h7h', '1c1d', '1g1f', '6c6d', '2h2f', '4d4e', '2f3f', '5d4c', '5g6h',
-        '6b7b', '8g8f', '5c5d', '6f6e', '6d6e', '7g3c+', '2a3c', 'B*3a', '4b4a',
-        '3a6d+', '8b7c', '6d6e', '4a6a', 'P*6d', 'B*3i', '5f5e', '7c6d', '6e7d',
-        '7b7c', '7d7c', '6d7c', '5e5d', 'P*5b', 'P*6g', '6a6c', '2i1g', '3i9c+',
-        '3f5f', '4c4d', '2e2d', '2c2d', '5f2f', '4d3e', '2f5f', 'B*7d', '5d5c+',
-        '5b5c', '5f6f', 'P*6d', '7f7e', '7d4g+', '6h7g', 'P*7d', '8f8e', '7d7e',
-        'P*5b', '7a6a', '8h8g', '6a5b', '7i8h', '5b6b', 'G*2c', '5c5d', '3g3f',
-        '3e4d', '2c2d', '7c7d', '9f9e', '9d9e', '3f3e', '4e4f', '3e3d', '3c4e',
-        '3d3c+', '8c8d', 'P*4h', '4g3f', '7g8f', '9c8b', '8e8d', 'P*8e', '8f9e',
-        '9b9e', '9h9e', 'P*9d', '9e9d', 'P*9c', 'L*8c', '7d8c', '8d8c+', '8b8c',
-        '9d9c+', '8a9c', 'P*9d', 'L*9e', '8g9f', 'P*9h', '9i9h', '9e9f', '6f9f',
-        'P*9e', '9f9e', 'P*9b', '9d9c+', '9b9c', '9e8e', 'L*8d', '8e8d', '8c8d',
-        'L*8g', 'P*8e', 'N*9f', '8d7d', 'L*8d', '6b7b', 'P*9b', '7d9b', 'P*8c',
-        'S*9e', 'S*8b', '7b8b', '8c8b+', '9b8b', '8d8b+', '9a8b', 'G*7d', 'S*7b',
-        'P*8c', '6c8c', 'P*8d', '8c5c', 'P*7c', '5c7c', 'B*9a', '8b9a', '7d7c',
-        '7b7c', '8d8c+', 'G*8a', 'P*9b', '8a9b', 'R*7a', 'L*8a', '8c9b', '9a9b',
-        '7a7b+'
+    "moves": [
+        "7g7f",
+        "3c3d",
+        "2g2f",
+        "4c4d",
+        "3i4h",
+        "8b4b",
+        "5i6h",
+        "5a6b",
+        "6h7h",
+        "6b7b",
+        "5g5f",
+        "3a3b",
+        "4h5g",
+        "3b4c",
+        "8h7g",
+        "7b8b",
+        "2f2e",
+        "2b3c",
+        "7h8h",
+        "4c5d",
+        "6g6f",
+        "9a9b",
+        "9i9h",
+        "8b9a",
+        "8h9i",
+        "7a8b",
+        "7i8h",
+        "6a7a",
+        "4i5h",
+        "7c7d",
+        "5h6h",
+        "4a5b",
+        "9g9f",
+        "9c9d",
+        "6i7i",
+        "5b6b",
+        "6h7h",
+        "1c1d",
+        "1g1f",
+        "6c6d",
+        "2h2f",
+        "4d4e",
+        "2f3f",
+        "5d4c",
+        "5g6h",
+        "6b7b",
+        "8g8f",
+        "5c5d",
+        "6f6e",
+        "6d6e",
+        "7g3c+",
+        "2a3c",
+        "B*3a",
+        "4b4a",
+        "3a6d+",
+        "8b7c",
+        "6d6e",
+        "4a6a",
+        "P*6d",
+        "B*3i",
+        "5f5e",
+        "7c6d",
+        "6e7d",
+        "7b7c",
+        "7d7c",
+        "6d7c",
+        "5e5d",
+        "P*5b",
+        "P*6g",
+        "6a6c",
+        "2i1g",
+        "3i9c+",
+        "3f5f",
+        "4c4d",
+        "2e2d",
+        "2c2d",
+        "5f2f",
+        "4d3e",
+        "2f5f",
+        "B*7d",
+        "5d5c+",
+        "5b5c",
+        "5f6f",
+        "P*6d",
+        "7f7e",
+        "7d4g+",
+        "6h7g",
+        "P*7d",
+        "8f8e",
+        "7d7e",
+        "P*5b",
+        "7a6a",
+        "8h8g",
+        "6a5b",
+        "7i8h",
+        "5b6b",
+        "G*2c",
+        "5c5d",
+        "3g3f",
+        "3e4d",
+        "2c2d",
+        "7c7d",
+        "9f9e",
+        "9d9e",
+        "3f3e",
+        "4e4f",
+        "3e3d",
+        "3c4e",
+        "3d3c+",
+        "8c8d",
+        "P*4h",
+        "4g3f",
+        "7g8f",
+        "9c8b",
+        "8e8d",
+        "P*8e",
+        "8f9e",
+        "9b9e",
+        "9h9e",
+        "P*9d",
+        "9e9d",
+        "P*9c",
+        "L*8c",
+        "7d8c",
+        "8d8c+",
+        "8b8c",
+        "9d9c+",
+        "8a9c",
+        "P*9d",
+        "L*9e",
+        "8g9f",
+        "P*9h",
+        "9i9h",
+        "9e9f",
+        "6f9f",
+        "P*9e",
+        "9f9e",
+        "P*9b",
+        "9d9c+",
+        "9b9c",
+        "9e8e",
+        "L*8d",
+        "8e8d",
+        "8c8d",
+        "L*8g",
+        "P*8e",
+        "N*9f",
+        "8d7d",
+        "L*8d",
+        "6b7b",
+        "P*9b",
+        "7d9b",
+        "P*8c",
+        "S*9e",
+        "S*8b",
+        "7b8b",
+        "8c8b+",
+        "9b8b",
+        "8d8b+",
+        "9a8b",
+        "G*7d",
+        "S*7b",
+        "P*8c",
+        "6c8c",
+        "P*8d",
+        "8c5c",
+        "P*7c",
+        "5c7c",
+        "B*9a",
+        "8b9a",
+        "7d7c",
+        "7b7c",
+        "8d8c+",
+        "G*8a",
+        "P*9b",
+        "8a9b",
+        "R*7a",
+        "L*8a",
+        "8c9b",
+        "9a9b",
+        "7a7b+",
     ],
-    'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1',
-    'names': ['\u7fbd\u751f\u5584\u6cbb', '\u85e4\u4e95\u731b'],
-    'win': 'b'
+    "sfen": "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1",
+    "names": ["\u7fbd\u751f\u5584\u6cbb", "\u85e4\u4e95\u731b"],
+    "win": "b",
 }
 
 TEST_KIF_WITH_TIME_RESULT = {
-    'moves': [
-        '7g7f', '3c3d', '2g2f', '8c8d', '2f2e', '8d8e', '6i7h', '4a3b', '2e2d', '2c2d',
-        '2h2d', '8e8f', '8g8f', '8b8f', '2d3d', '2b3c', '3d3f', '8f8d', '3f2f', '3a2b',
-        'P*8g', '5a5b', '3i4h', '1c1d', '1g1f', '2b2c', '5i5h', '6a5a', '4i3h', '7a6b',
-        '8h7g', '9c9d', '9g9f', '3c7g+', '8i7g', '2a3c', '7i6h', '8a9c', '7f7e', 'P*2d',
-        '7e7d', '7c7d', 'P*7b', '5a6a', '2f8f', '8d8f', '8g8f', 'R*8i', '7h7i', '8i9i+',
-        'R*8a', 'L*7e', 'B*4a', '5b5a', '4h5i', '7e7g+', '6h7g', '9i7i', '7g6h', '7i9i',
-        'L*5b', '5a4b', '8a6a+', 'N*7f', 'G*7i', '7f6h+', '7i6h', '3c4e', '6a6b', 'B*8d',
-        '6b5a', '8d5a', '5b5a+', '4e5g+', '6h5g', '9i5i', '5h5i', 'R*7i'
+    "moves": [
+        "7g7f",
+        "3c3d",
+        "2g2f",
+        "8c8d",
+        "2f2e",
+        "8d8e",
+        "6i7h",
+        "4a3b",
+        "2e2d",
+        "2c2d",
+        "2h2d",
+        "8e8f",
+        "8g8f",
+        "8b8f",
+        "2d3d",
+        "2b3c",
+        "3d3f",
+        "8f8d",
+        "3f2f",
+        "3a2b",
+        "P*8g",
+        "5a5b",
+        "3i4h",
+        "1c1d",
+        "1g1f",
+        "2b2c",
+        "5i5h",
+        "6a5a",
+        "4i3h",
+        "7a6b",
+        "8h7g",
+        "9c9d",
+        "9g9f",
+        "3c7g+",
+        "8i7g",
+        "2a3c",
+        "7i6h",
+        "8a9c",
+        "7f7e",
+        "P*2d",
+        "7e7d",
+        "7c7d",
+        "P*7b",
+        "5a6a",
+        "2f8f",
+        "8d8f",
+        "8g8f",
+        "R*8i",
+        "7h7i",
+        "8i9i+",
+        "R*8a",
+        "L*7e",
+        "B*4a",
+        "5b5a",
+        "4h5i",
+        "7e7g+",
+        "6h7g",
+        "9i7i",
+        "7g6h",
+        "7i9i",
+        "L*5b",
+        "5a4b",
+        "8a6a+",
+        "N*7f",
+        "G*7i",
+        "7f6h+",
+        "7i6h",
+        "3c4e",
+        "6a6b",
+        "B*8d",
+        "6b5a",
+        "8d5a",
+        "5b5a+",
+        "4e5g+",
+        "6h5g",
+        "9i5i",
+        "5h5i",
+        "R*7i",
     ],
-    'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1',
-    'names': [u'\u884c\u65b9\u5c1a\u53f2', u'\u7fbd\u751f\u5584\u6cbb'],
-    'win': 'w',
+    "sfen": "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1",
+    "names": ["\u884c\u65b9\u5c1a\u53f2", "\u7fbd\u751f\u5584\u6cbb"],
+    "win": "w",
 }
 
 TEST_KIF_81DOJO_RESULT = {
-    'moves': [
-        '7g7f', '3c3d', '7f7e', '4c4d', '2h7h', '8b4b', '7i6h', '7a8b', '7e7d', '7c7d', '7h7d'
-    ],
-    'sfen': 'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1',
-    'names': ['KikiNoOmata', 'XiaoNoOmata'],
-    'win': 'b',
+    "moves": ["7g7f", "3c3d", "7f7e", "4c4d", "2h7h", "8b4b", "7i6h", "7a8b", "7e7d", "7c7d", "7h7d"],
+    "sfen": "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1",
+    "names": ["KikiNoOmata", "XiaoNoOmata"],
+    "win": "b",
 }
 
-TEST_KIF_CUSTOM_BOARD_RESULT = {'names': ['大内延介', '最新詰将棋２００選'],
-                                'sfen': '8l/4R+B2k/7p1/6s2/9/9/9/9/9 w 1r1b4g3s4n3l17p 1',
-                                'moves': ['4b3a'],
-                                'win': '-'}
+TEST_KIF_CUSTOM_BOARD_RESULT = {
+    "names": ["大内延介", "最新詰将棋２００選"],
+    "sfen": "8l/4R+B2k/7p1/6s2/9/9/9/9/9 w 1r1b4g3s4n3l17p 1",
+    "moves": ["4b3a"],
+    "win": "-",
+}
+
 
 class ParserTest(unittest.TestCase):
     def test_parse_str(self):
@@ -654,35 +883,36 @@ class ParserTest(unittest.TestCase):
             tempdir = tempfile.mkdtemp()
 
             # cp932
-            path = os.path.join(tempdir, 'test1.kif')
-            with codecs.open(path, 'w', 'cp932') as f:
+            path = os.path.join(tempdir, "test1.kif")
+            with codecs.open(path, "w", "cp932") as f:
                 f.write(TEST_KIF_STR)
             result = KIF.Parser.parse_file(path)
             self.assertEqual(result[0], TEST_KIF_RESULT)
 
             # utf-8
-            path = os.path.join(tempdir, 'test2.kif')
-            with codecs.open(path, 'w', 'utf-8') as f:
+            path = os.path.join(tempdir, "test2.kif")
+            with codecs.open(path, "w", "utf-8") as f:
                 f.write(TEST_KIF_STR)
             result = KIF.Parser.parse_file(path)
             self.assertEqual(result[0], TEST_KIF_RESULT)
 
             # utf-8 (BOM)
-            path = os.path.join(tempdir, 'test3.kif')
-            with codecs.open(path, 'w', 'utf-8-sig') as f:
+            path = os.path.join(tempdir, "test3.kif")
+            with codecs.open(path, "w", "utf-8-sig") as f:
                 f.write(TEST_KIF_STR)
             result = KIF.Parser.parse_file(path)
             self.assertEqual(result[0], TEST_KIF_RESULT)
 
             # .kif with custom starting position
-            path = os.path.join(tempdir, 'test_tsume.kif')
-            with codecs.open(path, 'w', 'cp932') as f:
+            path = os.path.join(tempdir, "test_tsume.kif")
+            with codecs.open(path, "w", "cp932") as f:
                 f.write(TEST_KIF_CUSTOM_BOARD)
             result = KIF.Parser.parse_file(path)
             self.assertEqual(result[0], TEST_KIF_CUSTOM_BOARD_RESULT)
 
         finally:
             shutil.rmtree(tempdir)
+
 
 class ExporterTest(unittest.TestCase):
     def test_parse_str(self):
