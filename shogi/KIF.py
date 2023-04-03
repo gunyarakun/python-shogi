@@ -295,6 +295,10 @@ class Parser:
         return [summary]
 
 
+class ExporterException(Exception):
+    pass
+
+
 class Exporter:
     FULL_WIDTH_NUMBER = "１２３４５６７８９"
     JAPANESE_NUMBER = "一二三四五六七八九"
@@ -319,7 +323,14 @@ class Exporter:
             board.push_usi(move)
         # NOTE: only resign.
         kif += f"{len(moves) + 1} 投了 \r\n"
-        win = "先手" if len(moves) % 2 == 1 else "後手"
+        if len(moves) % 2 == 1:
+            if sfen_summary["win"] == "w":
+                raise ExporterException("Invalid win")
+            win = "先手"
+        else:
+            if sfen_summary["win"] == "b":
+                raise ExporterException("Invalid win")
+            win = "後手"
         kif += f"まで{len(moves)}手で{win}の勝ち\r\n"
 
         return kif
