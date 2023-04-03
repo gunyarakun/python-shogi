@@ -50,7 +50,7 @@ This is the scholars mate in python-shogi:
 Features
 --------
 
-* Supports Python 2.7 and Python 3.3+.
+* Supports Python 3.3+.
 
 * Supports standard shogi (hon shogi)
 
@@ -259,8 +259,6 @@ How to test
 ::
 
   > nosetests
-  or
-  > python setup.py test # requires python setup.py install
 
 If you want to print lines from the standard output, execute nosetests like following.
 

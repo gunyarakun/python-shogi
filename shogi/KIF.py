@@ -18,8 +18,6 @@
 
 # NOTE: Don't support ki2(Kifu2) format
 
-from __future__ import unicode_literals
-
 import os
 import re
 import sys

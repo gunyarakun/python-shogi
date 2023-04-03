@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 COLORS = [BLACK, WHITE] = range(2)
 
 PIECE_TYPES_WITH_NONE = [NONE,

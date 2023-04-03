@@ -17,8 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-
 __author__ = 'Tasuku SUENAGA a.k.a. gunyarakun'
 __email__ = 'tasuku-s-github@titech.ac'
 __version__ = '1.0.16'
