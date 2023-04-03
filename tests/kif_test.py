@@ -922,3 +922,14 @@ class ExporterTest(unittest.TestCase):
     def test_export_to_kif(self):
         result = KIF.Exporter.kif(TEST_KIF_RESULT)
         self.assertEqual(result, TEST_KIF_EXPORTED_TO_KIF)
+
+    def test_issue_61(self):
+        with self.assertRaises(KIF.ExporterException):
+            # Valid win must be WHITE
+            sfen_summary = {
+                "moves": ["7g7f", "3c3d"],
+                "sfen": "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL b - 1",
+                "names": ["羽生善治", "藤井猛"],
+                "win": "b",
+            }
+            KIF.Exporter.kif(sfen_summary)
