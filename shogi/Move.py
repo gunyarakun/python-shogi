@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 # NOTE: In chess we use "file - rank" notation like 'a1',
 #       in shogi we use a number for file, an alphabet for rank
 #       and opposite direction of files and ranks like '9i'.

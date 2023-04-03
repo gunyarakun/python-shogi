@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
-
 import re
 import time
 import shogi
@@ -429,7 +427,7 @@ class TCPProtocol:
             elif line_match.group(1) == 'incorrect':
                 raise ValueError('Login failed. Check username and password.')
         raise ValueError('Login response was invalid.')
-        
+
     def logout(self):
         line = self.command('LOGOUT')
         if line == 'LOGOUT:completed':
