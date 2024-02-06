@@ -79,7 +79,7 @@ class Parser:
             return ordered_dict()
 
         result = ordered_dict()
-        for item in target.split("　"):
+        for item in target.replace(" ", "　").split("　"):
             if len(item) == 1:
                 result[shogi.PIECE_JAPANESE_SYMBOLS.index(item)] = 1
             elif len(item) == 2 or len(item) == 3:
