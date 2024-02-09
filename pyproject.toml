@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-shogi"
-version = "1.1.0"
+version = "1.1.1"
 description = "A pure Python shogi library with move generation and validation and handling of common formats."
 authors = ["Tasuku SUENAGA a.k.a. gunyarakun <tasuku-s-github@titech.ac>"]
 keywords = ["shogi", "csa", "kif"]
